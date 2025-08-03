@@ -10,7 +10,7 @@ import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import doctorRoutes from "./routes/doctorRoutes.js"
 import appointmentRoutes from "./routes/appointmentRoutes.js"
-
+ import chatbotRoutes from "./routes/chatbotRoutes.js"
 dotenv.config();
 connectDB();
 
@@ -21,6 +21,8 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/doctor', doctorRoutes);
 app.use('/api/appointment', appointmentRoutes);
+app.use('/api/chatbot', chatbotRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

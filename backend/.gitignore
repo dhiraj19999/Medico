@@ -1,0 +1,53 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# dotenv environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+log/
+*.csv
+debug.log
+
+# OS / system files
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Build output
+dist/
+build/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Coverage reports
+coverage/
+.nyc_output/
+
+# TypeScript (if used)
+*.tsbuildinfo
+
+# PM2 process logs (if used)
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# MongoDB dump (if created)
+dump/
