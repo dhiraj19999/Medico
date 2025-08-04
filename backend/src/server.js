@@ -12,6 +12,7 @@ import doctorRoutes from "./routes/doctorRoutes.js"
 import appointmentRoutes from "./routes/appointmentRoutes.js"
  import chatbotRoutes from "./routes/chatbotRoutes.js"
  import nearByPharmacy from "./routes/nearbyRoutes.js"
+ import healthReport from "./routes/healthreportRoutes.js"
 dotenv.config();
 connectDB();
 
@@ -24,6 +25,7 @@ app.use('/api/doctor', doctorRoutes);
 app.use('/api/appointment', appointmentRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/nearby', nearByPharmacy);
+app.use('/api/health', healthReport);
 
 
 const PORT = process.env.PORT || 5000;
