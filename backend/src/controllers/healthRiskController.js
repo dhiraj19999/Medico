@@ -1,12 +1,12 @@
 import axios from "axios";
 import HealthReport from "../models/HealthReport.js";
 import Appointment from "../models/Appointment.js";
-import path from "path";
-import fs from "fs";
-import User from "../models/User.js";
-import PDFDocument from "pdfkit";
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+
+import fs from 'fs';
+import path from 'path';
+
+import puppeteer from 'puppeteer';
+
 import dayjs from "dayjs";
 import { config } from "dotenv";
 config();
@@ -107,8 +107,116 @@ Give a friendly and clear health risk analysis with lifestyle tips. Reply in the
 };
 */
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+export const getHealthReportPdfById = async (req, res) => {
+  try {
+    const reportId = req.params.reportId;
+    const report = await HealthReport.findById(reportId).populate('user');
+
+    if (!report || report.user._id.toString() !== req.user._id.toString()) {
+      return res.status(404).json({ message: 'Health report not found.' });
+    }
+
+    const logoPath = path.resolve("src/public/images/Healix.png");
+    const logoData = fs.readFileSync(logoPath).toString("base64");
+     //path.join('src', 'public', 'images', 'Healix.png');
+
+    // HTML with inline CSS (or use external CSS)
+    const html = `
+      <html>
+        <head>
+          <meta charset="UTF-8" />
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              padding: 20px;
+              line-height: 1.6;
+              color: #333;
+            }
+            .header {
+              text-align: center;
+              margin-bottom: 30px;
+            }
+            .logo {
+              max-width: 150px;
+              margin-bottom: 5px;
+            }
+            .title {
+              font-size: 28px;
+              color: #2c3e50;
+              font-weight: bold;
+             
+            }
+            .section {
+              margin-bottom: 20px;
+            }
+            .flag-green {
+              color: green;
+              font-weight: bold;
+            }
+            .flag-red {
+              color: red;
+              font-weight: bold;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <img src="data:image/png;base64,${logoData}" class="logo" />
+            <div class="title">Healix Health Report 🩺</div>
+          </div>
+
+          <div class="section">
+            <strong>👤 Name:</strong> ${report.user.name}
+          </div>
+
+          <div class="section">
+            <strong>📅 Date:</strong> ${new Date(report.createdAt).toLocaleString()}
+          </div>
+
+          <div class="section">
+            <strong>🧬 Age:</strong> ${report.age}<br/>
+            <strong>🚻 Gender:</strong> ${report.gender}<br/>
+            <strong>🩸 BP:</strong> ${report.bp} <br/>
+            <strong>🍬 Sugar:</strong> ${report.sugar}<br/>
+            <strong>🧈 Cholesterol:</strong> ${report.cholesterol} <br/>
+            <strong>❤️ Heart Rate:</strong> ${report.heartRate}<br/>
+            <strong>⚖️ Weight:</strong> ${report.weight} kg<br/>
+            <strong>📏 Height:</strong> ${report.height} cm<br/>
+            <strong>🤒 Symptoms:</strong> ${report.symptoms}<br/>
+          </div>
+
+          <div class="section">
+            <strong>🧠 AI Health Analysis:</strong><br/>
+            ${report.riskResult}
+          </div>
+
+          <div class="section">
+            <em>📌 Generated on: ${new Date().toLocaleString()}</em>
+          </div>
+        </body>
+      </html>
+    `;
+
+    // Puppeteer PDF generation
+    const browser = await puppeteer.launch({ headless: "new" });
+    const page = await browser.newPage();
+    await page.setContent(html, { waitUntil: 'load' });
+
+    const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true,   margin: { top: "30px", bottom: "30px", left: "20px", right: "20px" },});
+    await browser.close();
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="Healix-HealthReport-${Date.now()}.pdf"`,
+    });
+
+    res.send(pdfBuffer);
+  } catch (error) {
+    console.error('PDF Generation Error:', error.message);
+    res.status(500).json({ error: 'Failed to generate PDF report.' });
+  }
+};
+
 
 
 
