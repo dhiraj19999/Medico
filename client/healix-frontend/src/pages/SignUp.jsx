@@ -123,7 +123,7 @@ console.log("Compressed file size (KB):", compressedFile.size / 1024);
   // min-h-screen flex flex-col sm:flex-row items-center justify-center bg-gradient-to-tr p-4 mt-12
 // sm:block w-full max-w-md mr-6
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row sm:flex-row md:flex-row items-center justify-center bg-gradient-to-tr p-4 pt-36">
+    <div className="min-h-screen flex flex-col lg:flex-row sm:flex-row md:flex-row items-center justify-center bg-gradient-to-tr p-4 pt-36 mb-10">
       {/* GIF Section */}
       <motion.div
         initial={{ opacity: 0, x: -30 }}

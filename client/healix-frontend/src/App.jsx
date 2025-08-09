@@ -1,6 +1,6 @@
 
 import './App.css'
-
+import Footer from './components/Footer';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import { ToastContainer } from "react-toastify";
@@ -23,7 +23,7 @@ function App() {
       });
       console.log("User data:", response.data);
        if (response.data) setUser(response.data);
-      if(user) console.log("User from store:", user);
+     
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -60,11 +60,12 @@ console.log("User updated in store:", user);
 
       <Navbar />
    
-    <LoginForm/>
+    <SignupForm/>
       <Routes>
         <Route path="/" element={<Home />} />
         {/* Add more routes here */}
       </Routes>
+      <Footer/>
     </BrowserRouter>
   );
 }

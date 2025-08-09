@@ -4,6 +4,7 @@ import useUserStore from '../store/useUserStore';
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+   const [loading, setLoading] = useState(true);
   const user = useUserStore((state) => state.user);
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900 fixed -top-4 left-0 w-full z-50  ">
@@ -17,13 +18,32 @@ const Navbar = () => {
         <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
           <button
             type="button"
-            className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+            className="flex text-sm bg-gray-800 rounded-full md:me-0  focus:text-teal-300     focus:border-b-teal-400"
             id="user-menu-button"
             aria-expanded={isDropdownOpen}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <span className="sr-only">Open user menu</span>
-            <img className="w-12 h-12 rounded-full" src={user&&user.avatar} alt="user photo" />
+          
+          
+      <div
+      className="relative rounded-full overflow-hidden w-12 h-12 "
+      
+    >
+      {/* Skeleton placeholder */}
+      {loading && (
+        <div
+          className="absolute inset-0 bg-gray-300  rounded-full  w-12 h-12  animate-fadeInOut"
+          
+        />
+      )}
+
+      
+      
+       <img className={`w-12 h-12 rounded-full  ${loading?"hidden":""}`} src={user&&user.avatar} alt="user photo"   onLoad={() => setLoading(false)} />
+             </div>
+          
+           
           </button>
 
           {/* Dropdown */}
