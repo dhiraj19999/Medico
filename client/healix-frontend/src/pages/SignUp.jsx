@@ -1,10 +1,14 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import imageCompression from 'browser-image-compression';
+import signlogo from "../assets/sign.gif";
 import {
   FaUser, FaEnvelope, FaLock, FaPhone, FaMapMarkerAlt,
   FaBirthdayCake, FaImage, FaVenusMars
 } from "react-icons/fa";
 import { HashLoader } from "react-spinners";
+import axiosInstance from "../api/Api";
+import { toast } from "react-toastify";
 
 export default function SignupForm() {
   const [formData, setFormData] = useState({
@@ -13,7 +17,7 @@ export default function SignupForm() {
     password: "",
     phone: "",
     gender: "",
-    dob: "",
+    dateOfBirth: "",
     address: "",
     avatar: null,
   });
@@ -24,7 +28,7 @@ const override = {
   display: "block",
  
   borderColor: "red",
-  marginLeft: "270px",
+  margin: "0 auto",
 };
   const validate = () => {
     const newErrors = {};
@@ -33,41 +37,99 @@ const override = {
     if (!formData.password || formData.password.length < 6) newErrors.password = "Min 6 characters";
     if (!formData.phone || !/^\d{10}$/.test(formData.phone)) newErrors.phone = "10-digit phone required";
     if (!formData.gender) newErrors.gender = "Gender is required";
-    if (!formData.dob) newErrors.dob = "Date of birth required";
+    if (!formData.dateOfBirth) newErrors.dateOfBirth = "Date of birth required";
     if (!formData.address) newErrors.address = "Address is required";
     if (!formData.avatar) newErrors.avatar = "Avatar is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
+
+
+  const handleChange = async (e) => {
+  const { name, value, files } = e.target;
+
+  if (files && files.length > 0) {
+    try {
+      const compressedFile = await imageCompression(files[0], {
+  maxSizeMB: 0.3,           // 300 KB approx
+  maxWidthOrHeight: 400,    // max 400px width or height
+  useWebWorker: true,
+});
+console.log("Compressed file size (KB):", compressedFile.size / 1024);
+
+      setFormData((prev) => ({
+        ...prev,
+        [name]: compressedFile,
+      }));
+    } catch (error) {
+      console.log('Error compressing image:', error);
+      // Fallback: store original file if compression fails
+      setFormData((prev) => ({
+        ...prev,
+        [name]: files[0],
+      }));
+    }
+  } else {
+    // normal input change for non-file inputs
     setFormData((prev) => ({
       ...prev,
-      [name]: files ? files[0] : value,
+      [name]: value,
     }));
-  };
+  }
+};
+
+ const RegisterUser= async () => {
+  const data = new FormData();
+  Object.keys(formData).forEach(key => {
+    data.append(key, formData[key]);
+  });
+
+  await axiosInstance.post("/auth/register", data, {
+      headers: {
+        "Content-Type": "multipart/form-data",  
+      },
+    })
+    .then((response) => {
+      console.log("Registration successful:", response.data);
+      setLoad(false);
+      toast.success("✅ Registration successful!", {
+  icon: "🚀",
+  style: { fontSize: "1rem", fontWeight: "bold" },
+});
+     // window.location.href = "/login"; // Redirect to login after successful registration
+    })
+    .catch((error) => {
+      console.error("Registration error:", error);
+      setLoad(false);
+      toast.error(error.response?.data?.message || "❌ Registration failed!", {
+  icon: "⚠️",
+  style: { fontSize: "1rem", fontWeight: "bold" },
+});
+     
+    });  
+
+
+ }
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
       setLoad(true);
-      setTimeout(() => {
-        setLoad(false);
-        alert("Registration successful!");
-        console.log("Form Data Submitted:", formData);
-      }, 30000);
+       //RegisterUser();
     }
   };
-
+  // min-h-screen flex flex-col sm:flex-row items-center justify-center bg-gradient-to-tr p-4 mt-12
+// sm:block w-full max-w-md mr-6
   return (
-    <div className="min-h-screen flex flex-col sm:flex-row items-center justify-center bg-gradient-to-tr p-4 mt-12">
+    <div className="min-h-screen flex flex-col lg:flex-row sm:flex-row md:flex-row items-center justify-center bg-gradient-to-tr p-4 pt-36">
       {/* GIF Section */}
       <motion.div
         initial={{ opacity: 0, x: -30 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6 }}
-        className="hidden sm:block w-full max-w-md mr-6"
+        className="w-full max-w-md mb-6 sm:mb-0 sm:mr-6 "
       >
         <img
           src="https://sparkwavegroup.com/wp-content/uploads/2022/08/chatbot-1-1.gif"
@@ -84,6 +146,15 @@ const override = {
         onSubmit={handleSubmit}
         className="w-full max-w-2xl backdrop-blur-xl bg-white/30 shadow-2xl rounded-3xl p-6 sm:p-10 grid grid-cols-1 sm:grid-cols-2 gap-6 border border-white/40"
       >
+
+ <div className="sm:col-span-2 flex justify-center">
+    <img
+      src={signlogo}
+      alt="Logo"
+      className="w-[50px] h-[50px] rounded-full"
+    />
+  </div>
+
         <h2 className="text-3xl sm:col-span-2 font-extrabold text-center text-gray-800 drop-shadow mb-2">
           Create Your Healix Account
         </h2>
@@ -107,7 +178,7 @@ const override = {
         </div>
 
         {/* DOB */}
-        <InputWithIcon Icon={FaBirthdayCake} name="dob" value={formData.dob} handleChange={handleChange} error={errors.dob} type="date" />
+        <InputWithIcon Icon={FaBirthdayCake} name="dateOfBirth" value={formData.dateOfBirth} handleChange={handleChange} error={errors.dateOfBirth} type="date" />
 
         {/* Address */}
         <InputWithIcon Icon={FaMapMarkerAlt} name="address" placeholder="Address" value={formData.address} handleChange={handleChange} error={errors.address} isFullWidth />

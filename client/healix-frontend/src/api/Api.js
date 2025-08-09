@@ -1,25 +1,23 @@
 
-import axios from 'axios';
+import axios from "axios";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:5000/api", // change to your backend API
+  withCredentials: true, // 🧁 IMPORTANT: allows sending cookies
+});
 
+// Optional: interceptors for response errors
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Handle 401 (unauthorized) globally
+    if (error.response?.status === 401) {
+      // Optional: auto logout
+      window.location.href = "/login";
+    }
 
-export const fetchData= async (endpoint, method = 'GET', data = null) => {
-  try {
-    const config = {
-      method,
-      url: `${API_BASE_URL}/${endpoint}`,
-      data,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };      
-    const response = await axios(config);
-    return response.data;
-  } catch (error) {
-    console.error(`Error fetching data from ${endpoint}:`, error);
-
-    throw error.response ? error.response.data : new Error('Network Error');
+    return Promise.reject(error);
   }
-};
+);
 
+export default axiosInstance;

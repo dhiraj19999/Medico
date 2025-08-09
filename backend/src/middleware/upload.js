@@ -1,16 +1,10 @@
 // middleware/upload.js
 import multer from "multer";
-import { CloudinaryStorage } from "multer-storage-cloudinary";
-import cloudinary from "../config/cloudinary.js";
 
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: "user-profiles",
-    allowed_formats: ["jpg", "png", "jpeg"],
-  },
-});
 
-const upload = multer({ storage });
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024*1024 }, // 50mb 
+})
 
 export default upload;

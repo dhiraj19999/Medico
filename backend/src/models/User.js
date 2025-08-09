@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema({
   },
 
   dateOfBirth: {
-    type: Date
+    type: String
   },
 
   address: {
@@ -51,6 +51,12 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
    default: 'patient'
+  },
+
+   subscription:{
+    type: String,
+    enum: ['free', 'premium'],
+    default: 'free'
   },
 
   location: {

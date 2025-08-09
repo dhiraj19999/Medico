@@ -40,3 +40,31 @@
 .read-the-docs {
   color: #888;
 }
+
+
+/* Container styling */
+.custom-toast-container .Toastify__toast {
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  font-weight: 500;
+}
+
+/* Success toast */
+.custom-toast-container .Toastify__toast--success {
+  background: linear-gradient(135deg, #00b894, #55efc4);
+  color: white;
+}
+
+/* Error toast */
+.custom-toast-container .Toastify__toast--error {
+  background: linear-gradient(135deg, #d63031, #ff7675);
+  color: white;
+}
+
+/* Progress bar */
+.custom-toast-container .Toastify__progress-bar {
+  background: rgba(255, 255, 255, 0.6);
+}

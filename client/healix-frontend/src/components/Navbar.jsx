@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import logo from "../assets/Healix.png"
+import useUserStore from '../store/useUserStore';
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  const user = useUserStore((state) => state.user);
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900 fixed -top-4 left-0 w-full z-50  ">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -22,7 +23,7 @@ const Navbar = () => {
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <span className="sr-only">Open user menu</span>
-            <img className="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="user photo" />
+            <img className="w-12 h-12 rounded-full" src={user&&user.avatar} alt="user photo" />
           </button>
 
           {/* Dropdown */}
@@ -32,8 +33,8 @@ const Navbar = () => {
               id="user-dropdown"
             >
               <div className="px-4 py-3">
-                <span className="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
-                <span className="block text-sm text-gray-500 truncate dark:text-gray-400">name@flowbite.com</span>
+                <span className="block text-sm text-gray-900 dark:text-white">{user.name}</span>
+                <span className="block text-sm text-gray-500 truncate dark:text-gray-400">{user.email}</span>
               </div>
               <ul className="py-2" aria-labelledby="user-menu-button">
                 <li>
