@@ -10,6 +10,8 @@ import LoginForm from './pages/Login';
 import { useEffect } from 'react';
 import axiosInstance from './api/Api';
 import useUserStore from './store/useUserStore';
+import HomePage from './pages/Home';
+import About from './pages/About';
 function App() {
   const setUser = useUserStore((state) => state.setUser);
   const user = useUserStore((state) => state.user);
@@ -60,7 +62,7 @@ console.log("User updated in store:", user);
 
       <Navbar />
    
-    <SignupForm/>
+    <HomePage/>
       <Routes>
         <Route path="/" element={<Home />} />
         {/* Add more routes here */}
