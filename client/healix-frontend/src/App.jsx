@@ -13,6 +13,7 @@ import useUserStore from './store/useUserStore';
 import HomePage from './pages/Home';
 import About from './pages/About';
 import ChatBot from './pages/Chatbot';
+import NearbyFinder from './pages/NearBy';
 function App() {
   const setUser = useUserStore((state) => state.setUser);
   const user = useUserStore((state) => state.user);
@@ -63,9 +64,9 @@ console.log("User updated in store:", user);
 
       <Navbar />
    
-    <ChatBot />
+    <NearbyFinder />
       <Routes>
-        <Route path="/" element={<Home />} />
+        
         {/* Add more routes here */}
       </Routes>
       <Footer/>

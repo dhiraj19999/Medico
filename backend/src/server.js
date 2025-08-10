@@ -2,8 +2,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from "cookie-parser";
-
-
+import https from 'https';
+import fs from 'fs';
 
 import cors from 'cors';
 import connectDB from './config/db.js';
@@ -26,6 +26,12 @@ app.use(
   })
 );
 
+
+const options = {
+  key: fs.readFileSync("./certs/localhost-key.pem"),
+  cert: fs.readFileSync("./certs/localhost.pem"),
+};
+
 // Preflight handle
 app.options("*", cors({
    origin: "http://localhost:5173",
@@ -43,3 +49,4 @@ app.use('/api/health', healthReport);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+

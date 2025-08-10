@@ -19,8 +19,8 @@ out center tags;
       headers: { "Content-Type": "text/plain" }
     });
 
-    const defaultHospitalImg = "https://cdn-icons-png.flaticon.com/512/2967/2967350.png";
-    const defaultPharmacyImg = "https://cdn-icons-png.flaticon.com/512/3063/3063826.png";
+    const defaultHospitalImg = "https://thumbs.dreamstime.com/b/miniature-stylized-hospital-building-model-small-cartoon-style-d-rendered-pastel-colors-situated-grassy-area-377689517.jpg";
+    const defaultPharmacyImg = "https://png.pngtree.com/png-clipart/20250430/original/pngtree-colorful-cartoon-pharmacy-design-png-image_20897310.png";
 
     // Haversine formula for distance (in km)
     const haversine = (lat1, lon1, lat2, lon2) => {
