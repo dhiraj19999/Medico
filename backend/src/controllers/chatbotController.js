@@ -76,3 +76,30 @@ export const chatWithAI = async (req, res) => {
     res.status(500).json({ message: "AI is not responding. Please try again shortly." });
   }
 };
+
+
+
+export const getChatHistory = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const session = await ChatSession.findOne({ user: userId });  
+    if (!session) {
+
+
+      return res.status(404).json({ message: "No chat history found." });
+
+    }
+    res.status(200).json({ messages: session.messages });
+
+
+  } catch (err) {
+
+    console.error("Get Chat History Error:", err.message);
+
+
+
+    res.status(500).json({ message: "Failed to retrieve chat history." });
+
+
+  }
+};
