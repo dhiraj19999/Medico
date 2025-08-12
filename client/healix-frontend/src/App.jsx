@@ -14,6 +14,7 @@ import HomePage from './pages/Home';
 import About from './pages/About';
 import ChatBot from './pages/Chatbot';
 import NearbyFinder from './pages/NearBy';
+import ReportUploader from './pages/ReportUploader';
 function App() {
   const setUser = useUserStore((state) => state.setUser);
   const user = useUserStore((state) => state.user);
@@ -62,9 +63,12 @@ console.log("User updated in store:", user);
   className="custom-toast-container"
 />
 
-      <Navbar />
+  <Navbar />
+  {/* <HomePage/>*/}
+   {/*<About/>*/}
+   {/* <ChatBot /> */}
    
-    <NearbyFinder />
+   <ReportUploader/>
       <Routes>
         
         {/* Add more routes here */}
