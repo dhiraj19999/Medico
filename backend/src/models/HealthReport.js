@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 const HealthReportSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   age: Number,
-  gender: String,
+  gender: { type: String, enum: ["male", "female", "other"], required: true },
   bp: String,
   sugar: String,
   cholesterol: String,

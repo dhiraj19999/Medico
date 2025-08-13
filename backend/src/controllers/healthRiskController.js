@@ -110,17 +110,17 @@ Give a friendly and clear health risk analysis with lifestyle tips. Reply in the
 export const getHealthReportPdfById = async (req, res) => {
   try {
     const reportId = req.params.reportId;
-    const report = await HealthReport.findById(reportId).populate('user');
+    const report = await HealthReport.findById(reportId).populate("user");
 
     if (!report || report.user._id.toString() !== req.user._id.toString()) {
-      return res.status(404).json({ message: 'Health report not found.' });
+      return res.status(404).json({ message: "Health report not found." });
     }
 
+    // ✅ Logo as base64
     const logoPath = path.resolve("src/public/images/Healix.png");
     const logoData = fs.readFileSync(logoPath).toString("base64");
-     //path.join('src', 'public', 'images', 'Healix.png');
 
-    // HTML with inline CSS (or use external CSS)
+    // ✅ HTML
     const html = `
       <html>
         <head>
@@ -131,6 +131,7 @@ export const getHealthReportPdfById = async (req, res) => {
               padding: 20px;
               line-height: 1.6;
               color: #333;
+              background: #fff;
             }
             .header {
               text-align: center;
@@ -138,24 +139,19 @@ export const getHealthReportPdfById = async (req, res) => {
             }
             .logo {
               max-width: 150px;
-              margin-bottom: 5px;
+              margin-bottom: 10px;
             }
             .title {
-              font-size: 28px;
-              color: #2c3e50;
+              font-size: 26px;
               font-weight: bold;
-             
+              color: teal;
             }
             .section {
-              margin-bottom: 20px;
+              margin-bottom: 15px;
+              font-size: 14px;
             }
-            .flag-green {
-              color: green;
-              font-weight: bold;
-            }
-            .flag-red {
-              color: red;
-              font-weight: bold;
+            strong {
+              color: #2c3e50;
             }
           </style>
         </head>
@@ -165,29 +161,23 @@ export const getHealthReportPdfById = async (req, res) => {
             <div class="title">Healix Health Report 🩺</div>
           </div>
 
+          <div class="section"><strong>👤 Name:</strong> ${report.user.name}</div>
+          <div class="section"><strong>📅 Date:</strong> ${new Date(report.createdAt).toLocaleString()}</div>
           <div class="section">
-            <strong>👤 Name:</strong> ${report.user.name}
-          </div>
-
-          <div class="section">
-            <strong>📅 Date:</strong> ${new Date(report.createdAt).toLocaleString()}
-          </div>
-
-          <div class="section">
-            <strong>🧬 Age:</strong> ${report.age}<br/>
-            <strong>🚻 Gender:</strong> ${report.gender}<br/>
+            <strong>🧬 Age:</strong> ${report.age} <br/>
+            <strong>🚻 Gender:</strong> ${report.gender} <br/>
             <strong>🩸 BP:</strong> ${report.bp} <br/>
-            <strong>🍬 Sugar:</strong> ${report.sugar}<br/>
+            <strong>🍬 Sugar:</strong> ${report.sugar} <br/>
             <strong>🧈 Cholesterol:</strong> ${report.cholesterol} <br/>
-            <strong>❤️ Heart Rate:</strong> ${report.heartRate}<br/>
-            <strong>⚖️ Weight:</strong> ${report.weight} kg<br/>
-            <strong>📏 Height:</strong> ${report.height} cm<br/>
-            <strong>🤒 Symptoms:</strong> ${report.symptoms}<br/>
+            <strong>❤️ Heart Rate:</strong> ${report.heartRate} <br/>
+            <strong>⚖️ Weight:</strong> ${report.weight} kg <br/>
+            <strong>📏 Height:</strong> ${report.height} cm <br/>
+            <strong>🤒 Symptoms:</strong> ${report.symptoms}
           </div>
 
           <div class="section">
             <strong>🧠 AI Health Analysis:</strong><br/>
-            ${report.riskResult}
+            ${report.riskResult || "Analysis not available"}
           </div>
 
           <div class="section">
@@ -197,26 +187,35 @@ export const getHealthReportPdfById = async (req, res) => {
       </html>
     `;
 
-    // Puppeteer PDF generation
-    const browser = await puppeteer.launch({ headless: "new" });
-    const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: 'load' });
-
-    const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true,   margin: { top: "30px", bottom: "30px", left: "20px", right: "20px" },});
-    await browser.close();
-
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename="Healix-HealthReport-${Date.now()}.pdf"`,
+    // ✅ Puppeteer PDF
+    const browser = await puppeteer.launch({
+      headless: "new",
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
 
-    res.send(pdfBuffer);
+    const page = await browser.newPage();
+    await page.setContent(html, { waitUntil: "networkidle0" }); // wait until all images load
+
+    const pdfBuffer = await page.pdf({
+      format: "A4",
+      printBackground: true,
+      margin: { top: "30px", bottom: "30px", left: "20px", right: "20px" },
+    });
+
+    await browser.close();
+
+    // ✅ Response headers
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename="Healix-HealthReport-${Date.now()}.pdf"`);
+    res.end(pdfBuffer);
+
   } catch (error) {
-    console.error('PDF Generation Error:', error.message);
-    res.status(500).json({ error: 'Failed to generate PDF report.' });
+    console.error("PDF Generation Error:", error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: "Failed to generate PDF report." });
+    }
   }
 };
-
 
 
 
@@ -433,13 +432,22 @@ export const getHealthTrends = async (req, res) => {
     const bmiRounded = +bmi.toFixed(1);
 
     // 🔴🟢 Flags
-    const flags = {
-      bp: avgSys > 130 || avgDia > 85 ? "red" : "green",
-      sugar: avgSugar > 125 ? "red" : "green",
-      cholesterol: avgCholesterol > 200 ? "red" : "green",
-      heartRate: avgHeartRate < 60 || avgHeartRate > 100 ? "red" : "green",
-      bmi: bmiRounded < 18.5 || bmiRounded > 25 ? "red" : "green",
-    };
+ const flags = {
+  // Blood Pressure: AHA ke hisaab se 120/80 se zyada to red
+  bp: avgSys > 120 || avgDia > 80 ? "red" : "green",
+
+  // Sugar: ADA fasting sugar > 126 mg/dL => diabetes risk
+  sugar: avgSugar > 126 ? "red" : "green",
+
+  // Cholesterol: AHA total cholesterol > 200 mg/dL => high
+  cholesterol: avgCholesterol > 200 ? "red" : "green",
+
+  // Heart Rate: Resting HR < 60 or > 100 bpm => abnormal
+  heartRate: avgHeartRate < 60 || avgHeartRate > 100 ? "red" : "green",
+
+  // BMI: WHO guidelines — healthy BMI = 18–24, integer range me
+  bmi: bmiRounded < 18 || bmiRounded > 24 ? "red" : "green"
+};
 
     const summary = generateSummary(flags);
 

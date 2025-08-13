@@ -5,10 +5,10 @@ import upload from '../middleware/upload.js';
 import { protect } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
-router.post("/register",upload.single("avatar"), registerUser);
-router.post('/login', loginUser);
+router.post("/register",upload.single("avatar"), registerUser);  //  done
+router.post('/login', loginUser);  // done
 
-router.get("/user",protect, getUserProfile);
-router.post("/logout",protect, logoutUser);
+router.get("/user",protect, getUserProfile);  // done
+router.post("/logout",protect, logoutUser);  // done
 
 export default router;

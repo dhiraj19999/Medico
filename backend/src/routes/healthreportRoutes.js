@@ -6,10 +6,10 @@ import { protect } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 
-router.post("/predict",protect, analyzeHealthRisk);
-router.get("/reports",protect, getHealthReports);
+router.post("/predict",protect, analyzeHealthRisk);  // done
+router.get("/reports",protect, getHealthReports);  // done
 router.get("/trends",protect, getHealthTrends);
-router.get("/reports/:reportId",protect, getHealthReportPdfById);
+router.get("/reports/:reportId",protect, getHealthReportPdfById); // done
 
 
 export default router;

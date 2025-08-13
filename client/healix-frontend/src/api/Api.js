@@ -13,7 +13,7 @@ axiosInstance.interceptors.response.use(
     // Handle 401 (unauthorized) globally
     if (error.response?.status === 401) {
       // Optional: auto logout
-      window.location.href = "/login";
+     // window.location.href = "/login";
     }
 
     return Promise.reject(error);

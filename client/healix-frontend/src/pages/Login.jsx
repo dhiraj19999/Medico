@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import loginlogo from "../assets/login.gif"
-
-
+import Cookies from 'js-cookie';
+import { Link, useNavigate } from "react-router-dom";
+import useUserStore from "../store/useUserStore";
 import {
    FaEnvelope, FaLock, 
  
@@ -13,14 +14,15 @@ import { toast } from "react-toastify";
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({
-    
+   
     email: "",
     password: "",
    
   });
-
+ const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [load, setLoad] = useState(false);
+    const setUser = useUserStore((state) => state.setUser);
 const override = {
   display: "block",
  
@@ -36,6 +38,28 @@ const override = {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
+
+
+const getUser= async () => {
+   
+    try {
+      const response = await axiosInstance.get("/auth/user", {
+        headers: {
+          "Content-Type": "application/json"
+       
+        },
+      });
+      console.log("User data:", response.data);
+       if (response.data) setUser(response.data);
+     
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  
+  }
+  
+
 
 
 
@@ -60,12 +84,16 @@ const LoginUser = async () => {
     })
     .then((response) => {
       console.log("Login successful:", response.data);
+      getUser();
+     // Cookies.set("token", response.data.token, { expires: 7 }); // Set cookie for 7 days
       setLoad(false);
       toast.success("✅ Login successful!", {
   icon: "🚀",
   style: { fontSize: "1rem", fontWeight: "bold" },
 });
      // window.location.href = "/login"; // Redirect to login after successful registration
+    // window.location.href = "/"; // Redirect to home after successful login
+    navigate("/");
     })
     .catch((error) => {
       console.error("Registration error:", error);
@@ -160,7 +188,11 @@ const LoginUser = async () => {
     >
       {load ? <HashLoader color="teal" size={30} cssOverride={override} /> : "Login"}
     </motion.button>
+    <Link to="/register" className="text-teal-500 font-semibold text-sm mt-2 hover:underline">
+    Don't have an account? Sign up here.
+  </Link>
   </motion.form>
+  
 </div>
 
   );

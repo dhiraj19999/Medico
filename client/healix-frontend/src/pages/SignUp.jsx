@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import imageCompression from 'browser-image-compression';
+import { useNavigate } from "react-router-dom";
 import signlogo from "../assets/sign.gif";
 import {
   FaUser, FaEnvelope, FaLock, FaPhone, FaMapMarkerAlt,
@@ -9,6 +10,7 @@ import {
 import { HashLoader } from "react-spinners";
 import axiosInstance from "../api/Api";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 export default function SignupForm() {
   const [formData, setFormData] = useState({
@@ -21,7 +23,7 @@ export default function SignupForm() {
     address: "",
     avatar: null,
   });
-
+const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [load, setLoad] = useState(false);
 const override = {
@@ -98,6 +100,7 @@ console.log("Compressed file size (KB):", compressedFile.size / 1024);
   style: { fontSize: "1rem", fontWeight: "bold" },
 });
      // window.location.href = "/login"; // Redirect to login after successful registration
+     navigate("/login");
     })
     .catch((error) => {
       console.error("Registration error:", error);
@@ -208,7 +211,11 @@ console.log("Compressed file size (KB):", compressedFile.size / 1024);
           
           : "Sign Up"}
         </motion.button>
+          <Link to="/login" className="text-teal-500 font-semibold text-sm mt-2 hover:underline">
+        Already have an account? Login here.
+      </Link>
       </motion.form>
+    
     </div>
   );
 }

@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import streamifier from "streamifier";
 import cloudinary from "../config/cloudinary.js";
+
 // 🔐 Token Generator
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -93,13 +94,7 @@ const start = Date.now();
     });
 
     // 🔐 Set token in cookie
-    res.cookie("token", generateToken(user._id), {
-      httpOnly: true,
-      secure: false, // Set to true in production
-      // secure: process.env.NODE_ENV === "production",
-      sameSite: "lax", // // prod me 'none' + secure: true agar cross-site
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+  
 
     res.status(201).json({
       _id: user._id,
@@ -127,7 +122,8 @@ export const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
 
     // 🔐 Set token in cookie
-    res.cookie("token", generateToken(user._id), {
+    const token= generateToken(user._id);
+    res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
@@ -139,6 +135,8 @@ export const loginUser = async (req, res) => {
       name: user.name,
       email: user.email,
       avatar: user.avatar,
+      token:token
+    
     });
   } catch (err) {
     res.status(500).json({ message: err.message });

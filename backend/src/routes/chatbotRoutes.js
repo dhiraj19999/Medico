@@ -4,6 +4,6 @@ import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/",protect, chatWithAI);
-router.get("/",protect,getChatHistory)
+router.post("/",protect, chatWithAI); // done
+router.get("/",protect,getChatHistory)  // done
 export default router;
