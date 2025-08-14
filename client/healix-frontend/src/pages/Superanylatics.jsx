@@ -41,6 +41,7 @@ export  function SuperAnalytics() {
       try {
         const res = await axiosInstance.get("/superanalytics");
         setAnalytics(res.data);
+        console.log("Analytics data:", res.data);
       } catch (err) {
         console.error("Error fetching super analytics:", err);
       } finally {
@@ -54,7 +55,7 @@ export  function SuperAnalytics() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-white text-black">
-        <HashLoader color="black" size={40} />
+        <HashLoader color="teal" size={40} />
         <p className="mt-4 text-lg font-semibold">Analyzing your health journey...</p>
       </div>
     );
@@ -129,6 +130,21 @@ export  function SuperAnalytics() {
     animation: { duration: 1500, easing: "easeOutQuart" },
   };
 
+
+
+
+function getRandomColor() {
+   const colors = ["#FCA5A5", // red-300
+    "#F9A8D4", // pink-300
+    "#86EFAC", // green-300
+    "#5EEAD4", // teal-300
+    "#C4B5FD", // purple-300
+    "#93C5FD", // blue-300
+    "#FDBA74",];
+  return colors[Math.floor(Math.random() * colors.length)];
+}
+
+
 return (
   <div className="max-w-4xl mx-auto p-6 bg-white shadow-2xl rounded-2xl mt-5 mb-10">
 
@@ -146,19 +162,16 @@ return (
       const [headingLine, ...restLines] = section.split("\n");
       const content = restLines.join("\n");
 
-      // Decide color based on section type
-      let bgGradient = "bg-blue-300"; 
-      if (headingLine.toLowerCase().includes("historical")) bgGradient = "bg-red-300";
-      else if (headingLine.toLowerCase().includes("trend")) bgGradient = "bg-orange-300";
-      else if (headingLine.toLowerCase().includes("prediction")) bgGradient = "bg-green-300";
-      else if (headingLine.toLowerCase().includes("preventive")) bgGradient = "bg-pink-300";
-
+   
+      let bgGradient = `bg-${getRandomColor()}-300`; 
+      
       return (
         <motion.div
           key={index}
-          className={`mb-6 p-5 rounded-xl bg-gradient-to-r ${bgGradient} shadow-inner hover:shadow-lg transition-shadow duration-300`}
+          className={`mb-6 p-5 rounded-xl   shadow-inner hover:shadow-lg transition-shadow duration-300`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0, transition: { delay: index * 0.1 } }}
+          style={{backgroundColor: ` ${getRandomColor()}` }}
         >
           {headingLine && (
             <h3 className="text-xl font-semibold text-black mb-2">{headingLine}</h3>

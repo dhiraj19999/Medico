@@ -15,9 +15,10 @@ import HomePage from './pages/Home';
 import About from './pages/About';
 import ChatBot from './pages/Chatbot';
 import NearbyFinder from './pages/NearBy';
-
-import PrivateRoute from './components/PrivateRoute';
+import DoctorRegistrationForm from './pages/DocRegistaration.jsx';
+import {PrivateRoute} from './components/PrivateRoute.jsx';
 import PricingPage from './pages/Pricing';
+import BookAppointment from './pages/BookAppointment.jsx';
 
 import HealthTrendsDashboard from './pages/HealthTrend';
 import ReportDashboard from './pages/ReportDashbord';
@@ -41,7 +42,7 @@ function App() {
        setLoadingUser(false);
      
     } catch (error) {
-      console.error("Error fetching user data:", error);
+     
       setLoadingUser(false);
     }
   
@@ -52,7 +53,7 @@ function App() {
     
 getUser();
 
-console.log("User updated in store:", user);
+
   }, []);
   
   
@@ -95,6 +96,8 @@ console.log("User updated in store:", user);
          <Route path="/pricing" element={<PricingPage />} />
          <Route path="/health-report" element={<PrivateRoute><ReportDashboard /></PrivateRoute>} />
          <Route path="/dashboard" element={<PrivateRoute><HealthTrendsDashboard /></PrivateRoute>} />
+         <Route path="/docregister" element={<DoctorRegistrationForm />} />
+          <Route path="/book-appointment" element={<BookAppointment />} />
       </Routes>
       <Footer/>
     </BrowserRouter>

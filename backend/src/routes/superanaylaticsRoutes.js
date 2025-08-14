@@ -5,7 +5,7 @@ import { protect } from "../middleware/authMiddleware.js";
 
 
 
-router.get("/",protect, getAIHealthJourney); 
+router.get("/",protect, getAIHealthJourney); // done
 
 
 export default router;

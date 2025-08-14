@@ -1,25 +1,35 @@
-
-import useUserStore from "../store/useUserStore";
+import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import useUserStore from "../store/useUserStore";
 
-const  PrivateRoute =  ({ children }) => {
+export const PrivateRoute = ({ children }) => {
+  const [status, setStatus] = useState("loading");
+  const user = useUserStore((state) => state.user);
 
-const { status } = getStatus()
+  useEffect(() => {
+    if (!user) {
+      setStatus("unauthenticated");
+     
+    } else {
+      setStatus("authenticated");
+    }
+  }, [user]);
 
-if (status === "unauthenticated") {
-  return <Navigate to="/login" />;
-}
+  if (status === "loading") {
+    return <div>Loading...</div>; // optional loader
+  }
 
-return children;
+  if (status === "unauthenticated") {
+     toast.error("❌ Login Please!", {
+        icon: "⚠️",
+        style: { fontSize: "1rem", fontWeight: "bold" },
+      });
+    return <Navigate to="/" />; // SPA redirect
+    // window.location.href = "/"; // use this only if you want full reload
+  }
 
+  return children;
 };
-export default PrivateRoute;
 
 
-const getStatus=async () => {
-  const user = await useUserStore((state) => state.user);
-
-  if (!user) return { status: "unauthenticated" };
-
-  return { status: "authenticated" };
-};

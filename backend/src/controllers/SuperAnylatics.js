@@ -68,6 +68,7 @@ const sanitizedUploadedReports = uploads.map(u => {
 
       console.log(userData.uploadedReports)
 console.log(userData.appointments)
+console.log(userData.reports)
    const prompt = `
 You are a professional medical AI assistant.
 
@@ -88,8 +89,9 @@ Tasks:
 8. Integrate insights from Appointments, Health Reports, and Uploaded Reports to produce a comprehensive and accurate assessment.
 
 Instructions:
-- Separate your output into 4 clear sections: Historical Observations, Trends, Predictions, Preventive Advice.
+- Separate your output into 4 clear sections: Historical Observations, Trends, Predictions, Preventive Advice, Test Results, Flag .
 - Use concise, bullet-point format for easy reading.
+- Flag any patterns that may require urgent medical attention.
 - Use simple, encouraging, and non-medical language understandable by anyone.
 - Avoid unnecessary medical jargon; explain in plain terms.
 - Clearly indicate positive, neutral, or concerning trends.
@@ -112,7 +114,7 @@ Instructions:
       }
     );
 
-    const aiSummary = response.data.choices[0].message.content;
+    const aiSummary = await response.data.choices[0].message.content;
 
     // 5️⃣ Send response
     res.json({

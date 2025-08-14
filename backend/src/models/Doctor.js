@@ -32,8 +32,10 @@ const doctorSchema = new mongoose.Schema({
     required: true,
     minlength: 6
   },
-
-  
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
   gender: {
     type: String,
     enum: ["male", "female", "other"],
@@ -47,23 +49,37 @@ const doctorSchema = new mongoose.Schema({
     state: String,
     country: String,
     pincode: String,
-    location: {
-      type: { type: String, enum: ['Point'], default: 'Point' },
-      coordinates: { type: [Number], default: [0, 0] }, // [lng, lat]
-    }
+   
   },
   availableDays: [String], // e.g. ["Monday", "Wednesday"]
   availableTime: {
     start: String, // e.g. "09:00"
     end: String,   // e.g. "17:00"
   },
+   location: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point'
+    },
+    coordinates: {
+      type: [Number], // [longitude, latitude]
+      default: [0, 0]
+    }
+  },
+  role:{
+    type: String,
+    enum: ['doctor', 'admin'],
+    default: 'doctor'
+  },
+  
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-
+doctorSchema.index({ location: "2dsphere" });
 
 doctorSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();

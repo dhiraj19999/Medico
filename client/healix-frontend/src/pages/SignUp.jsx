@@ -120,7 +120,7 @@ console.log("Compressed file size (KB):", compressedFile.size / 1024);
     e.preventDefault();
     if (validate()) {
       setLoad(true);
-       //RegisterUser();
+       RegisterUser();
     }
   };
   // min-h-screen flex flex-col sm:flex-row items-center justify-center bg-gradient-to-tr p-4 mt-12
@@ -200,7 +200,10 @@ console.log("Compressed file size (KB):", compressedFile.size / 1024);
           type="submit"
           disabled={load}
           className={load?"sm:col-span-2 w-full py-3 mt-2 bg-gradient-to-r from-green-100 to-teal-100 text-white font-bold rounded-xl shadow-md hover:from-green-200 hover:to-teal-200 transition-all duration-300":"sm:col-span-2 w-full py-3 mt-2 bg-gradient-to-r from-green-500 to-teal-500 text-white font-bold rounded-xl shadow-md hover:from-green-600 hover:to-teal-600 transition-all duration-300"}
-        >
+       
+       
+       
+       >
           {load ? 
           
           
