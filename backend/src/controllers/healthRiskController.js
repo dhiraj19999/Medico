@@ -189,12 +189,14 @@ export const getHealthReportPdfById = async (req, res) => {
 
     // ✅ Puppeteer PDF
     const browser = await puppeteer.launch({
-      headless: "new",
+     // headless: "new",
+     headless: true,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
 
     const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: "networkidle0" }); // wait until all images load
+   // await page.setContent(html, { waitUntil: "networkidle0" }); // wait until all images load
+   await page.setContent(html, { waitUntil: "load", timeout: 0 });
 
     const pdfBuffer = await page.pdf({
       format: "A4",

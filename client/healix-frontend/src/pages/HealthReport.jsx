@@ -61,10 +61,10 @@ const override = {
         <form
           onSubmit={handleSubmit}
           className="bg-white w-full max-w-lg p-6 rounded-2xl shadow-lg space-y-4"
+
         >
-          <h2 className="text-2xl font-bold text-gray-800 text-center">
-            Health Report Form
-          </h2>
+             <h1 className="text-3xl font-bold mb-6 text-gray-800">📊 Fill Health Metrics form </h1>
+         
 
           {/* Row 1: Age & Gender */}
           <div className="flex gap-4">

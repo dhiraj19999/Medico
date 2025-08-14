@@ -40,6 +40,24 @@ export default function ReportUploader() {
     fetchReports();
   }, []);
 
+
+const deleteReport = async (id) => {
+  try {
+    await axiosInstance.delete(`/reports/${id}`);
+    toast.success("✅ Report deleted successfully!", {
+      icon: "🚀",
+      style: { fontSize: "1rem", fontWeight: "bold" },
+    });
+    fetchReports();
+  } catch (error) {
+    console.error("Delete failed:", error);
+    toast.error("❌ Failed to delete the report. Please try again.", {
+      icon: "⚠️",
+      style: { fontSize: "1rem", fontWeight: "bold" },
+    });
+  }
+};
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -191,10 +209,10 @@ export default function ReportUploader() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-purple-200 flex flex-col items-center p-6">
+    <div className="min-h-screen bg-gradient-to-br  flex flex-col items-center p-6">
       <style>{styles}</style>
 
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">📄 Upload Medical Report</h1>
+      <h1 className="text-3xl font-bold mb-6 text-gray-800">📄 Upload Your Digital  Medical Report</h1>
 
       {(loadingInitial ) ? (
         <SkeletonForm />
@@ -260,23 +278,34 @@ export default function ReportUploader() {
                   </p>
                 </div>
 
-                <div className="flex space-x-4">
-                  <button
-                    onClick={() => downloadReport(report._id)}
-                    className="flex-1 bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded shadow transition-colors duration-300"
-                    title="Download Original Report"
-                  >
-                    ⬇ Original Report
-                  </button>
+   <div className="grid grid-cols-3 gap-2 mt-1">
+  <button
+    onClick={() => downloadReport(report._id)}
+    className="bg-teal-500 hover:bg-teal-600 text-white px-2 py-2 rounded shadow transition-colors duration-300 text-sm"
+    title="Download Original Report"
+  >
+    ⬇ Original
+  </button>
 
-                  <button
-                    onClick={() => downloadSummary(report._id, report.filename)}
-                    className="flex-1 bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded shadow transition-colors duration-300"
-                    title="Download Summary"
-                  >
-                    📝 Summary PDF
-                  </button>
-                </div>
+  <button
+    onClick={() => downloadSummary(report._id, report.filename)}
+    className="bg-teal-500 hover:bg-teal-600 text-white px-2 py-2 rounded shadow transition-colors duration-300 text-sm"
+    title="Download Summary"
+  >
+    📝 Summary
+  </button>
+
+  <button
+    onClick={() => deleteReport(report._id)}
+    className="bg-red-500 hover:bg-red-600 text-white px-2 py-2 rounded shadow transition-colors duration-300 text-sm"
+    title="Delete Report"
+  >
+    🗑 Delete
+  </button>
+</div>
+
+
+               
               </div>
             ))}
           </div>

@@ -15,11 +15,12 @@ import HomePage from './pages/Home';
 import About from './pages/About';
 import ChatBot from './pages/Chatbot';
 import NearbyFinder from './pages/NearBy';
-import ReportUploader from './pages/ReportUploader';
+
 import PrivateRoute from './components/PrivateRoute';
 import PricingPage from './pages/Pricing';
-import HealthReportPage from './pages/HealthReport';
+
 import HealthTrendsDashboard from './pages/HealthTrend';
+import ReportDashboard from './pages/ReportDashbord';
 function App() {
   const setUser = useUserStore((state) => state.setUser);
   const user = useUserStore((state) => state.user);
@@ -87,12 +88,12 @@ console.log("User updated in store:", user);
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<PrivateRoute><About /></PrivateRoute> } />
         <Route path="/chatbot" element={<PrivateRoute><ChatBot /></PrivateRoute>} />
-        <Route path="/report-uploader" element={<PrivateRoute><ReportUploader /></PrivateRoute>} />
+       
         <Route path="/nearby" element={<PrivateRoute><NearbyFinder /></PrivateRoute>} />
          <Route path="/login" element={<LoginForm />} />
          <Route path="/register" element={<SignupForm />} />
          <Route path="/pricing" element={<PricingPage />} />
-         <Route path="/health-report" element={<PrivateRoute><HealthReportPage /></PrivateRoute>} />
+         <Route path="/health-report" element={<PrivateRoute><ReportDashboard /></PrivateRoute>} />
          <Route path="/dashboard" element={<PrivateRoute><HealthTrendsDashboard /></PrivateRoute>} />
       </Routes>
       <Footer/>

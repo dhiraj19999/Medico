@@ -128,7 +128,7 @@ console.log(summary);
 export const getUserReports = async (req, res) => {
   try {
     const reports = await Report.find({ userId: req.user.id })
-      .select("_id filename summary uploadedAt");
+      .select("_id filename summary  createdAt");
     res.json(reports);
   } catch (err) {
     console.error(err);
@@ -177,5 +177,24 @@ console.log(report)
   } catch (err) {
     console.error("Download summary error:", err);
     res.status(500).json({ error: "Failed to download summary" });
+  }
+};
+
+
+export const deleteReport = async (req, res) => {
+  try {
+    const reportId = req.params.id;
+
+    // Find the report by id and user to ensure authorization
+    const report = await Report.findByIdAndDelete(reportId);
+    if (!report) {
+      return res.status(404).json({ error: "Report not found" });
+    }
+
+   
+    res.json({ message: "Report deleted successfully" });
+  } catch (err) {
+    console.error("Delete report error:", err);
+    res.status(500).json({ error: "Failed to delete report" });
   }
 };

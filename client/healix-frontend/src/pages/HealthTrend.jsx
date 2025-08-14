@@ -2,6 +2,7 @@ import React, { useEffect, useState,useRef } from "react";
 import axiosInstance from "../api/Api.js";
 import { motion } from "framer-motion";
 import { HashLoader } from "react-spinners";
+import {SuperAnalytics} from "./Superanylatics.jsx";
 import {
   ResponsiveContainer,
   RadialBarChart,
@@ -266,7 +267,7 @@ export default function HealthTrendsDashboard() {
               }`}
               whileHover={{ scale: 1.05 }}
             >
-              <p className="text-gray-700">{stat.label}</p>
+              <p className="text-black">{stat.label}</p>
               <p className="text-2xl font-bold text-black">{stat.value}</p>
             </motion.div>
           ))}
@@ -326,6 +327,7 @@ export default function HealthTrendsDashboard() {
       </div>
     </div>
     <HealthTrends/>
+    <SuperAnalytics />
     </>
   );
 }

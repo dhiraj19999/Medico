@@ -10,7 +10,10 @@ const reportSchema = new mongoose.Schema({
   contentType: { type: String },
   summary: { type: String },
   file: { type: Buffer},
-  uploadedAt: { type: Date, default: Date.now }
-});
+    createdAt: { type: Date, default: Date.now }
+
+},
+
+);
 
 export default mongoose.model("Report", reportSchema);

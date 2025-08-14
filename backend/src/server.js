@@ -14,6 +14,7 @@ import appointmentRoutes from "./routes/appointmentRoutes.js"
  import nearByPharmacy from "./routes/nearbyRoutes.js"
  import healthReport from "./routes/healthreportRoutes.js"
 import uploadReport from "./routes/uploadreportRoutes.js"
+import superAnylatic from "./routes/superanaylaticsRoutes.js"
 dotenv.config();
 connectDB();
 
@@ -47,6 +48,7 @@ app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/nearby', nearByPharmacy);
 app.use('/api/health', healthReport);
 app.use('/api/reports', uploadReport);
+app.use('/api/superanalytics', superAnylatic);
 
 
 const PORT = process.env.PORT || 5000;
