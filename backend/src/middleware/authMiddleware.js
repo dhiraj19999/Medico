@@ -2,7 +2,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import Doctor from "../models/Doctor.js";
-
+/*
 export const protect = async (req, res, next) => {
   try {
     // Get token from cookie
@@ -20,6 +20,39 @@ export const protect = async (req, res, next) => {
 
     next(); // proceed to next middleware or route
   } catch (err) {
+    return res.status(401).json({ message: "Not authorized, invalid token" });
+  }
+};*/
+export const protect = async (req, res, next) => {
+  try {
+    // Get token from cookie
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(401).json({ message: "Not authorized, token missing" });
+    }
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Try finding in User collection
+    let account = await User.findById(decoded.id).select("-password");
+
+    // If not found in User, try in Doctor
+    if (!account) {
+      account = await Doctor.findById(decoded.id).select("-password");
+    }
+
+    // If still not found
+    if (!account) {
+      return res.status(401).json({ message: "Not authorized, account not found" });
+    }
+
+    // Attach account (user or doctor) to request
+    req.user = account
+    next();
+  } catch (err) {
+    console.error("Auth error:", err);
     return res.status(401).json({ message: "Not authorized, invalid token" });
   }
 };

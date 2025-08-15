@@ -19,9 +19,12 @@ import DoctorRegistrationForm from './pages/DocRegistaration.jsx';
 import {PrivateRoute} from './components/PrivateRoute.jsx';
 import PricingPage from './pages/Pricing';
 import BookAppointment from './pages/BookAppointment.jsx';
-
+import DoctorLoginForm from './pages/doctor/Doctorlogin.jsx';
 import HealthTrendsDashboard from './pages/HealthTrend';
 import ReportDashboard from './pages/ReportDashbord';
+import CreateHospital from './pages/admin/CreateHospital.jsx';
+import Hospitalassign from './pages/doctor/AssignHopital.jsx';
+import AppointmentsPage from './pages/Appointment.jsx';
 function App() {
   const setUser = useUserStore((state) => state.setUser);
   const user = useUserStore((state) => state.user);
@@ -97,7 +100,10 @@ getUser();
          <Route path="/health-report" element={<PrivateRoute><ReportDashboard /></PrivateRoute>} />
          <Route path="/dashboard" element={<PrivateRoute><HealthTrendsDashboard /></PrivateRoute>} />
          <Route path="/docregister" element={<DoctorRegistrationForm />} />
-          <Route path="/book-appointment" element={<BookAppointment />} />
+          <Route path="/book-appointment" element={<AppointmentsPage />} />
+          <Route path="/create-hospital" element={<CreateHospital />} />
+          <Route path='/doctorlogin' element={<DoctorLoginForm/>}/>
+          <Route path='/assign-hospital' element={<Hospitalassign/>}/>
       </Routes>
       <Footer/>
     </BrowserRouter>

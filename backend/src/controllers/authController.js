@@ -145,6 +145,7 @@ export const loginUser = async (req, res) => {
 
 
 //  get user profile
+/*
 export const getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("-password");
@@ -155,7 +156,21 @@ export const getUserProfile = async (req, res) => {
     console.error("Get User Profile Error:", err);
     res.status(500).json({ message: err.message });
   }
+};  */
+
+export const getUserProfile = async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(404).json({ message: "Account not found" });
+    }
+
+    res.json(req.user); // user ya doctor dono kaam karega
+  } catch (err) {
+    console.error("Get User Profile Error:", err);
+    res.status(500).json({ message: err.message });
+  }
 };
+
 
 // ✅ Logout User
 

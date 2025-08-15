@@ -25,8 +25,12 @@ const appointmentSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["booked", "completed", "cancelled"],
-    default: "booked",
+    enum: ["Pending", "Completed", "Cancelled","Confirmed"],
+    default: "Pending",
+  },
+  hospital:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"Hospital",
   },
   createdAt: {
     type: Date,

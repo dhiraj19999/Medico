@@ -131,7 +131,7 @@ export const getNearbyDoctors = async (req, res) => {
           $maxDistance: 50000 // 50 km = 50,000 meters
         }
       }
-    }).select("-password");
+    }).select("-password").populate("hospitals");
 
     res.json({ success: true, data: nearbyDoctors });
   } catch (error) {

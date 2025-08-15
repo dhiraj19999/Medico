@@ -5,7 +5,7 @@ import { isAdmin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/register",upload.single("avatar"), registerDoctor); // photo field
+router.post("/register",upload.single("avatar"), registerDoctor); // photo field done
 router.post("/login", loginDoctor);
 router.get("/nearbydoc", getNearbyDoctors);
 

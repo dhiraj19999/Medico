@@ -51,6 +51,11 @@ const doctorSchema = new mongoose.Schema({
     pincode: String,
    
   },
+  appointments:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref: 'Appointment',
+  }],
+  hospitals:[{type:mongoose.Schema.Types.ObjectId,ref:'Hospital'}],
   availableDays: [String], // e.g. ["Monday", "Wednesday"]
   availableTime: {
     start: String, // e.g. "09:00"

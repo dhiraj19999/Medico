@@ -28,6 +28,16 @@ const feedbackSchema = new mongoose.Schema({
     max: 5,
     default: 0
   },
+  appointment: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Appointment",
+    
+  },
+  videoappointment: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "VideoConsultation",
+    
+  },
   createdAt: {
     type: Date,
     default: Date.now
