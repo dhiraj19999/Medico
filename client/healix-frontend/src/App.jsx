@@ -25,6 +25,7 @@ import ReportDashboard from './pages/ReportDashbord';
 import CreateHospital from './pages/admin/CreateHospital.jsx';
 import Hospitalassign from './pages/doctor/AssignHopital.jsx';
 import AppointmentsPage from './pages/Appointment.jsx';
+import ModifyAppointments from './pages/doctor/ModifyStatus.jsx';
 function App() {
   const setUser = useUserStore((state) => state.setUser);
   const user = useUserStore((state) => state.user);
@@ -104,6 +105,7 @@ getUser();
           <Route path="/create-hospital" element={<CreateHospital />} />
           <Route path='/doctorlogin' element={<DoctorLoginForm/>}/>
           <Route path='/assign-hospital' element={<Hospitalassign/>}/>
+          <Route path='/modify-appointment' element={<ModifyAppointments/>}/>
       </Routes>
       <Footer/>
     </BrowserRouter>

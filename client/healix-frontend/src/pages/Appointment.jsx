@@ -81,11 +81,23 @@ useEffect(() => {
   };
 
   const now = new Date();
+const filteredAppointments = appointments.filter(appt => {
+  const apptDate = new Date(appt.date);
+  const status = appt.status?.toLowerCase();
 
-  const filteredAppointments = appointments.filter(appt => {
-    const apptDate = new Date(appt.date);
-    return tab === "upcoming" ? apptDate >= now : apptDate < now;
-  });
+  if (tab === "upcoming") {
+    return (
+      apptDate >= now && 
+      (status === "pending" || status === "confirmed")
+    );
+  } else {
+    return (
+      apptDate < now || 
+      status === "completed" || 
+      status === "cancelled"
+    );
+  }
+});
 
   const AppointmentSkeleton = () => (
     <div className="animate-pulse bg-white p-4 rounded-2xl shadow-md mb-4">
@@ -224,13 +236,22 @@ useEffect(() => {
                        <span className="flex items-center gap-1 bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm">
                         Reason: {appt.reason}
                       </span>
+
+                     {appt.cancelReason&&(
+                      <span className="flex items-center gap-1 bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm">
+                       Cancelled Reason : {appt.cancelReason}
+                      </span>
+                     )}
+
                     </div>
 
                     {/* Reason */}
                     
 
 
-                   {tab === "past" && !appt.feedback ? (
+                   {tab === "past" && !appt.feedback && appt.
+status=="Completed"
+ ? (
   <div className="mt-3 border-t pt-3">
     <input
       type="number"
@@ -298,6 +319,8 @@ useEffect(() => {
                        Comment: {appt.feedback.comment}
   </span>
                       
+                  
+                  
                     </div>
 
 

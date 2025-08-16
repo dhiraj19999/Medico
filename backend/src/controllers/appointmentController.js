@@ -150,17 +150,100 @@ export const getUserAppointments = async (req, res) => {
 // 👨‍⚕️ Get Appointments for Doctor
 export const getDoctorAppointments = async (req, res) => {
   try {
-    const appointments = await Appointment.find({ doctor: req.doctor._id })
-       .populate({
-        path: "doctor",
-        select: "name hospitals",
-        populate: {
-          path: "hospitals",
-          select: "name city"
-        }
-      })
+    const appointments = await Appointment.find({ doctor: req.user._id }).populate("user")
+    .populate("hospital").populate("feedback")
+      
       .sort({ date: -1 });
     res.json(appointments);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+//  modify appointment status 
+
+export const modifyAppointmentStatus = async (req, res) => {
+  try {
+    const appointmentId = req.params.id;
+    const {newStatus,reason,userId} = req.body;
+    let updatedAppointment;
+ const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER, // sender email
+        pass: process.env.EMAIL_PASS, // app password
+      },
+    })
+     const userData= await User.findById(userId)
+     const doctorData=await Doctor.findById(req.user._id)
+    const appointment = await Appointment.findById(appointmentId).populate("hospital");
+     const hospitalData=appointment.hospital
+
+    
+    if(reason && newStatus==="Cancelled"){
+updatedAppointment = await Appointment.findByIdAndUpdate(
+      appointmentId,
+      { status: newStatus,cancelReason:reason },
+      { new: true } 
+    );
+    const mailOptions = {
+      from: `"Healix" <${process.env.EMAIL_USER}>`,
+      to: userData.email,
+      subject: "Your Appointment Status",
+      html: `
+        <h2>Appointment Details</h2>
+        <p>Dear ${userData.name},</p>
+        <p>Your appointment has been  cancelled by the doctor.</p>
+        <h3>Details:</h3>
+        <ul>
+          <li><b>Doctor Name:</b> ${doctorData.name} </li>
+           <li><b>Doctor Phone and Email:</b>  ${doctorData.phone || "N/A"} (${doctorData.email ||  "N/A"})</li>
+          <li><b>Hospital Name:</b> ${hospitalData?.name || "N/A"} </li>
+            <li><b>Hospital Phone and Email:</b> ${hospitalData?.phone || "N/A"} ${hospitalData.gmail || "N/A"}</li>
+          <li><b>Hospital City:</b> ${hospitalData?.city || ""}, ${hospitalData?.state || ""}</li>
+          <li><b>Hospital Address:</b> ${hospitalData?.streetAdd || "NA"}</li>
+          <li><b>Date:</b> ${appointment.date}</li>
+          <li><b>Time:</b> ${appointment.time}</li>
+          <li><b>Reason For Cancellation:</b> ${reason || "Not specified"}</li>
+        </ul>
+        <p>Thank you for choosing our service.</p>
+      `,
+    };
+await transporter.sendMail(mailOptions);
+    }else if(newStatus=="Confirmed"){
+       updatedAppointment = await Appointment.findByIdAndUpdate(
+      appointmentId,
+      { status: newStatus },
+      { new: true } 
+    );
+
+ const mailOptions = {
+      from: `"Healix" <${process.env.EMAIL_USER}>`,
+      to: userData.email,
+      subject: "Your Appointment Status",
+      html: `
+        <h2>Appointment Details</h2>
+        <p>Dear ${userData.name},</p>
+        <p>Your appointment has been Successfully Confirmed by the doctor.</p>
+        <h3>Details:</h3>
+        <ul>
+          <li><b>Doctor Name:</b> ${doctorData.name} </li>
+           <li><b>Doctor Phone and Email:</b>  ${doctorData.phone || "N/A"} (${doctorData.email ||  "N/A"})</li>
+          <li><b>Hospital Name:</b> ${hospitalData?.name || "N/A"} </li>
+            <li><b>Hospital Phone and Email:</b> ${hospitalData?.phone || "N/A"} ${hospitalData?.gmail || "N/A"}</li>
+          <li><b>Hospital City:</b> ${hospitalData?.city || ""}, ${hospitalData?.state || ""}</li>
+          <li><b>Hospital Address:</b> ${hospitalData?.streetAdd || "NA"}</li>
+          <li><b>Date:</b> ${appointment.date}</li>
+          <li><b>Time:</b> ${appointment.time}</li>
+          <li><b>Reason For appointment:</b> ${appointment.reason || "Not specified"}</li>
+        </ul>
+        <p>Thank you for choosing our service.</p>
+      `,
+    };
+await transporter.sendMail(mailOptions);
+    }
+    
+    res.json({message: "Appointment status changed successfully", appointment: updatedAppointment});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

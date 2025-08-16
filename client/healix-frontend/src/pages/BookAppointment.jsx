@@ -38,6 +38,7 @@ const BookAppointment = () => {
         `/doctor/nearbydoc?latitude=${lat}&longitude=${long}`
       );
       setDoctors(res.data.data);
+      console.log(res.data.data)
     } catch (error) {
       console.error("Error fetching doctors:", error);
       toast.error("❌ Something went wrong");
@@ -86,7 +87,12 @@ function calculateAverageRating(ratings) {
   return Number.isInteger(average) ? average : parseFloat(average.toFixed(1));
 }
 
-
+function convertTo12Hour(time) {
+  let [hour, minute] = time.split(":").map(Number);
+  let ampm = hour >= 12 ? "PM" : "AM";
+  hour = hour % 12 || 12;
+  return `${hour}:${minute.toString().padStart(2, "0")} ${ampm}`;
+}
 
   // Initial fetch on mount
   useEffect(() => {
@@ -244,7 +250,9 @@ function calculateAverageRating(ratings) {
 
         <div className="flex flex-wrap justify-center gap-2 mt-3">
           <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm shadow-sm">
-            {doc.specialization}
+            {doc.specialization.replace(/,/g, '|')     // saare commas remove
+  .replace(/\s+/g, ' ')  // multiple spaces ko single space me convert
+  .trim()}
           </span>
           <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm shadow-sm">
             {doc.qualifications} | {doc.experience} yr exp
@@ -267,7 +275,7 @@ function calculateAverageRating(ratings) {
 
         {doc.availableTime && (
           <p className="text-gray-700 mt-2 font-medium">
-            {doc.availableTime.start}-AM {doc.availableTime.end}-PM
+            {convertTo12Hour(doc.availableTime.start)} - {convertTo12Hour(doc.availableTime.end)}
           </p>
         )}
 
