@@ -103,7 +103,10 @@ const DoctorRegistrationForm = () => {
       "location",
       JSON.stringify({
         type: "Point",
-        coordinates: [parseFloat(formData.longitude), parseFloat(formData.latitude)],
+       coordinates: [
+  parseFloat(parseFloat(formData.longitude).toFixed(6)),
+  parseFloat(parseFloat(formData.latitude).toFixed(6))
+],
       })
     );
 

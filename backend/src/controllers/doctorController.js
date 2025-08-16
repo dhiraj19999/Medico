@@ -30,7 +30,7 @@ export const registerDoctor = async (req, res) => {
 
     // Parse location
     let parsedLocation = { type: "Point", coordinates: [0, 0] };
-    if (location) {
+    /*if (location) {
       if (typeof location === "string") {
         try { parsedLocation = JSON.parse(location); } catch {}
       } else if (typeof location === "object") {
@@ -40,7 +40,44 @@ export const registerDoctor = async (req, res) => {
 
     if (!parsedLocation.coordinates || parsedLocation.coordinates.length !== 2) {
       return res.status(400).json({ message: "Invalid location coordinates" });
+    }*/
+
+
+
+
+if (location) {
+  if (typeof location === "string") {
+    try {
+      const temp = JSON.parse(location);
+      if (temp.coordinates && temp.coordinates.length === 2) {
+        parsedLocation = temp;
+      } else {
+        return res.status(400).json({ message: "Invalid coordinates format" });
+      }
+    } catch (err) {
+      return res.status(400).json({ message: "Invalid JSON for location" });
     }
+  } else if (typeof location === "object") {
+    if (location.coordinates && location.coordinates.length === 2) {
+      parsedLocation = location;
+    } else {
+      return res.status(400).json({ message: "Invalid coordinates object" });
+    }
+  }
+} else {
+  return res.status(400).json({ message: "Location is required" });
+}
+
+
+
+
+
+
+
+
+
+
+
 
     // Avatar Upload
     let avatarUrl = "";
@@ -137,5 +174,62 @@ export const getNearbyDoctors = async (req, res) => {
   } catch (error) {
     console.error("Error finding nearby doctors:", error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+// controllers/doctorController.js
+
+
+export const searchDoctors = async (req, res) => {
+  try {
+    const { search } = req.body;
+
+    if (!search || search.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: "❌ Please enter something to search",
+      });
+    }
+
+    // Trim and lowercase
+    const searchValue = search.trim();
+
+    let query = {};
+
+    if (/^\d+$/.test(searchValue)) {
+      // Only digits → treat as pincode
+      query["address.pincode"] = { $regex: searchValue, $options: "i" };
+    } else {
+      // String → search in multiple fields
+      query = {
+        $or: [
+          { name: { $regex: searchValue, $options: "i" } },
+          { "address.city": { $regex: searchValue, $options: "i" } },
+          { "address.state": { $regex: searchValue, $options: "i" } },
+        ],
+      };
+    }
+
+    const doctors = await Doctor.find(query).populate("hospitals", "name city");
+
+    if (!doctors.length) {
+      return res.status(404).json({
+        success: false,
+        message: "No doctors found matching your search",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      count: doctors.length,
+      data: doctors,
+    });
+  } catch (error) {
+    console.error("Search error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while searching doctors",
+    });
   }
 };

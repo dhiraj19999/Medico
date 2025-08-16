@@ -16,6 +16,7 @@ import appointmentRoutes from "./routes/appointmentRoutes.js"
 import uploadReport from "./routes/uploadreportRoutes.js"
 import superAnylatic from "./routes/superanaylaticsRoutes.js"
 import hospital from "./routes/hospitalRoutes.js"
+import feedbackRoute from "./routes/feedbackRoute.js"
 dotenv.config();
 connectDB();
 
@@ -51,6 +52,7 @@ app.use('/api/health', healthReport);
 app.use('/api/reports', uploadReport);
 app.use('/api/superanalytics', superAnylatic);
 app.use('/api/hospital', hospital);
+app.use('/api/feedback', feedbackRoute);
 
 
 const PORT = process.env.PORT || 5000;

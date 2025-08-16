@@ -108,10 +108,10 @@ const mailOptions = {
         <ul>
           <li><b>Doctor Name:</b> ${doctorData.name} </li>
            <li><b>Doctor Phone and Email:</b>  ${doctorData.phone || "N/A"} (${doctorData.email ||  "N/A"})</li>
-          <li><b>Hospital Name:</b> ${hospitalData?.name || "N/A"} (${hospitalData?.phone || "N/A"})</li>
-            <li><b>Hospital Phone and Email:</b> ${hospitalData?.phone || "N/A"} (${hospitalData?.gmail || "N/A"})</li>
+          <li><b>Hospital Name:</b> ${hospitalData?.name || "N/A"} </li>
+            <li><b>Hospital Phone and Email:</b> ${hospitalData?.phone || "N/A"} ${hospitalData?.gmail || "N/A"}</li>
           <li><b>Hospital City:</b> ${hospitalData?.city || ""}, ${hospitalData?.state || ""}</li>
-          <li><b>Hospital Address:</b> ${hospitalData?.streetAdd || "NA"},  }</li>
+          <li><b>Hospital Address:</b> ${hospitalData?.streetAdd || "NA"}</li>
           <li><b>Date:</b> ${appointmentDate}</li>
           <li><b>Time:</b> ${appointmentTime}</li>
           <li><b>Reason:</b> ${reason || "Not specified"}</li>
@@ -138,7 +138,7 @@ const mailOptions = {
 export const getUserAppointments = async (req, res) => {
   try {
     const appointments = await Appointment.find({ user: req.user._id })
-      .populate("doctor").populate("hospital")
+      .populate("doctor").populate("hospital").populate("feedback")
       .sort({ date: -1 });
 
     res.json(appointments);

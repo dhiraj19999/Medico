@@ -36,6 +36,8 @@ const doctorSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  rating:[{type:Number}],
+
   gender: {
     type: String,
     enum: ["male", "female", "other"],
@@ -51,6 +53,7 @@ const doctorSchema = new mongoose.Schema({
     pincode: String,
    
   },
+ 
   appointments:[{
     type:mongoose.Schema.Types.ObjectId,
     ref: 'Appointment',
