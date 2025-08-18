@@ -5,6 +5,7 @@ import upload from '../middleware/upload.js';
 import { protect } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
+
 router.post("/register",upload.single("avatar"), registerUser);  //  done
 router.post('/login', loginUser);  // done
 

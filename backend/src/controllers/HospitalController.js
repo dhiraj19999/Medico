@@ -108,8 +108,8 @@ export const getHospitalsByDoctor = async (req, res) => {
 
 export const assignDoctorToHospitals = async (req, res) => {
   try {
-    const { hospitalIds } = req.body;
-    const doctorId = req.user._id; // protect middleware se milta hai
+    const { hospitalIds,doctorId } = req.body;
+    //const doctorId = req.user._id; // protect middleware se milta hai
 
     // Validate
     if (!doctorId || !Array.isArray(hospitalIds) || hospitalIds.length === 0) {

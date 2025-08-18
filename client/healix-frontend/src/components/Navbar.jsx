@@ -105,8 +105,41 @@ const Navbar = () => {
                   <Link to="/chatbot" className="block px-4 py-2 text-sm text-gray-950 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">AI Health Assistant 🤖</Link>
                 </li>
                 <li>
-                  <Link to="/earnings" className="block px-4 py-2 text-sm text-gray-950 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Earnings</Link>
+                  <Link to="/book-appointment" className="block px-4 py-2 text-sm text-gray-950 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Book Appointment 📅 </Link>
                 </li>
+                {user?.role === "admin" && (
+                  <li>
+                    <Link to="/docregister" className="block px-4 py-2 text-sm text-gray-950 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Doctor Registration</Link>
+                  </li>
+                )}
+              {user?.role === "admin" && (
+                  <li>
+                    <Link to="/create-hospital" className="block px-4 py-2 text-sm text-gray-950 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Create Hospital</Link>
+                  </li>
+                )}
+                 {user?.role === "admin" && (
+                  <li>
+                    <Link to="/assign-hospital" className="block px-4 py-2 text-sm text-gray-950 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Assign Hospital</Link>
+                  </li>
+                )}
+
+   {user?.role === "doctor" && (
+                  <li>
+                    <Link to="/modify-appointment" className="block px-4 py-2 text-sm text-gray-950 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Modify Appointment</Link>
+                  </li>
+                )}
+
+                  {user?.role === "doctor" && (
+                  <li>
+                    <Link to="/doctorinsights" className="block px-4 py-2 text-sm text-gray-950 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Insights</Link>
+                  </li>
+                )}
+{user?.role === "admin" && (
+                  <li>
+                    <Link to="/all-doc" className="block px-4 py-2 text-sm text-gray-950 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">All Doctors</Link>
+                  </li>
+                )}
+
                 <li>
                   <button
                     className="px-6 py-2 rounded-full text-white font-semibold

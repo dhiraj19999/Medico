@@ -35,6 +35,7 @@ export default function ReportUploader() {
   const [loadingInitial, setLoadingInitial] = useState(true); // For initial fetch loading
   const [message, setMessage] = useState("");
   const cardsRef = useRef([]);
+  const [buttonload,setButtonload]=useState("")
 
   useEffect(() => {
     fetchReports();
@@ -42,6 +43,7 @@ export default function ReportUploader() {
 
 
 const deleteReport = async (id) => {
+  setButtonload("delete")
   try {
     await axiosInstance.delete(`/reports/${id}`);
     toast.success("✅ Report deleted successfully!", {
@@ -49,12 +51,14 @@ const deleteReport = async (id) => {
       style: { fontSize: "1rem", fontWeight: "bold" },
     });
     fetchReports();
+    setButtonload("")
   } catch (error) {
     console.error("Delete failed:", error);
     toast.error("❌ Failed to delete the report. Please try again.", {
       icon: "⚠️",
       style: { fontSize: "1rem", fontWeight: "bold" },
     });
+     setButtonload("")
   }
 };
 
@@ -100,6 +104,7 @@ const deleteReport = async (id) => {
 
   const handleUpload = async (e) => {
     e.preventDefault();
+    setButtonload("upload");
     if (!file) return alert("Please select a file!");
 
     const formData = new FormData();
@@ -118,6 +123,7 @@ const deleteReport = async (id) => {
       });
       setFile(null);
       fetchReports();
+       setButtonload("")
     } catch (err) {
       console.error(err);
       toast.error(err.response?.data?.message || "❌ Upload failed!", {
@@ -126,9 +132,11 @@ const deleteReport = async (id) => {
       });
     }
     setLoading(false);
+     setButtonload("")
   };
 
   const downloadReport = async (id) => {
+    setButtonload("original");
     try {
       const res = await axiosInstance.get(`/reports/download/${id}`, {
         responseType: "blob",
@@ -147,12 +155,14 @@ const deleteReport = async (id) => {
         icon: "🚀",
         style: { fontSize: "1rem", fontWeight: "bold" },
       });
+       setButtonload("")
     } catch (error) {
       console.error("Download failed:", error);
       toast.error("❌ Failed to download the report. Please try again.", {
         icon: "⚠️",
         style: { fontSize: "1rem", fontWeight: "bold" },
       });
+       setButtonload("")
     }
   };
 
@@ -169,17 +179,20 @@ const deleteReport = async (id) => {
   };
 
   const downloadSummary = async (id, filename) => {
+    setButtonload("summary");
     try {
       const res = await axiosInstance.get(`/reports/summary/${id}`, {
         responseType: "text",
       });
       downloadSummaryAsPDF(res.data, filename.replace(/\.[^/.]+$/, "") + "_summary.pdf");
+      setButtonload("")
     } catch (error) {
       console.error("Failed to download summary PDF", error);
       toast.error("❌ Failed to download summary", {
         icon: "⚠️",
         style: { fontSize: "1rem", fontWeight: "bold" },
       });
+      setButtonload("")
     }
   };
 
@@ -281,26 +294,28 @@ const deleteReport = async (id) => {
    <div className="grid grid-cols-3 gap-2 mt-1">
   <button
     onClick={() => downloadReport(report._id)}
-    className="bg-teal-500 hover:bg-teal-600 text-white px-2 py-2 rounded shadow transition-colors duration-300 text-sm"
+    className={`${buttonload=="original"?"from-green-100 to-teal-100":"bg-teal-500 hover:bg-teal-600"} text-white px-2 py-2 rounded shadow transition-colors duration-300 text-sm`}
     title="Download Original Report"
   >
-    ⬇ Original
+      {buttonload=="original"?<HashLoader color="teal" size={30} cssOverride={override} />:"⬇ Original"}
   </button>
 
   <button
     onClick={() => downloadSummary(report._id, report.filename)}
-    className="bg-teal-500 hover:bg-teal-600 text-white px-2 py-2 rounded shadow transition-colors duration-300 text-sm"
+    className={`${buttonload=="summary"?"from-green-100 to-teal-100":"bg-teal-500 hover:bg-teal-600"} text-white px-2 py-2 rounded shadow transition-colors duration-300 text-sm`}
     title="Download Summary"
   >
-    📝 Summary
+   
+   
+  {  buttonload=="summary"?<HashLoader color="teal" size={30} cssOverride={override} />:  "📝 Summary" }
   </button>
 
   <button
     onClick={() => deleteReport(report._id)}
-    className="bg-red-500 hover:bg-red-600 text-white px-2 py-2 rounded shadow transition-colors duration-300 text-sm"
+    className={`${buttonload=="delete"?"from-green-100 to-teal-100":"bg-red-500 hover:bg-red-600"} text-white px-2 py-2 rounded shadow transition-colors duration-300 text-sm`}
     title="Delete Report"
   >
-    🗑 Delete
+    {buttonload=="delete"?<HashLoader color="teal" size={30} cssOverride={override} />:" 🗑 Delete"}
   </button>
 </div>
 

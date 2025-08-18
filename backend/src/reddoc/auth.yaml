@@ -1,0 +1,158 @@
+openapi: 3.0.3
+info:
+  title: Healix Auth API
+  version: 1.0.0
+  description: Authentication endpoints for Healix app (register, login, profile, logout)
+servers:
+  - url: http://localhost:5000/api/auth
+    description: Local server
+
+paths:
+  /register:
+    post:
+      summary: Register a new user
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: John Doe
+                email:
+                  type: string
+                  example: john@example.com
+                phone:
+                  type: string
+                  example: 9876543210
+                password:
+                  type: string
+                  example: strongPassword123
+                gender:
+                  type: string
+                  example: male
+                dateOfBirth:
+                  type: string
+                  format: date
+                  example: 1990-01-01
+                address:
+                  type: string
+                  example: "123 Main St, City, Country"
+                avatar:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  avatar:
+                    type: string
+        '400':
+          description: User already exists
+        '500':
+          description: Server error
+
+  /login:
+    post:
+      summary: Login user
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: john@example.com
+                password:
+                  type: string
+                  example: strongPassword123
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  avatar:
+                    type: string
+                  token:
+                    type: string
+        '400':
+          description: Invalid email or password
+        '500':
+          description: Server error
+
+  /user:
+    get:
+      summary: Get logged-in user profile
+      tags:
+        - Auth
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: User profile retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  avatar:
+                    type: string
+        '401':
+          description: Not authorized
+        '500':
+          description: Server error
+
+  /logout:
+    post:
+      summary: Logout user
+      tags:
+        - Auth
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Logged out successfully
+        '401':
+          description: Not authorized
+        '500':
+          description: Server error
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token

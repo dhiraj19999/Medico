@@ -85,6 +85,10 @@ const doctorSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  rankingScore:{
+    type:Number,
+    default: 0
+  }
 });
 
 doctorSchema.index({ location: "2dsphere" });

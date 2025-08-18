@@ -193,7 +193,8 @@ updatedAppointment = await Appointment.findByIdAndUpdate(
       html: `
         <h2>Appointment Details</h2>
         <p>Dear ${userData.name},</p>
-        <p>Your appointment has been  cancelled by the doctor.</p>
+       <p>We regret to inform you that your appointment has been cancelled by the doctor. We sincerely apologize for any inconvenience this may have caused.</p>
+
         <h3>Details:</h3>
         <ul>
           <li><b>Doctor Name:</b> ${doctorData.name} </li>
@@ -204,6 +205,7 @@ updatedAppointment = await Appointment.findByIdAndUpdate(
           <li><b>Hospital Address:</b> ${hospitalData?.streetAdd || "NA"}</li>
           <li><b>Date:</b> ${appointment.date}</li>
           <li><b>Time:</b> ${appointment.time}</li>
+           <li><b>Appointment Reason:</b> ${appointment.reason}</li>
           <li><b>Reason For Cancellation:</b> ${reason || "Not specified"}</li>
         </ul>
         <p>Thank you for choosing our service.</p>
@@ -224,7 +226,8 @@ await transporter.sendMail(mailOptions);
       html: `
         <h2>Appointment Details</h2>
         <p>Dear ${userData.name},</p>
-        <p>Your appointment has been Successfully Confirmed by the doctor.</p>
+     <p>We are pleased to inform you that your appointment has been successfully confirmed by the doctor. Kindly visit the hospital on the scheduled date and time.</p>
+
         <h3>Details:</h3>
         <ul>
           <li><b>Doctor Name:</b> ${doctorData.name} </li>

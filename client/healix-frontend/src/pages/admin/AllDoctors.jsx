@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react";
-import axiosInstance from "../api/Api.js";
+import axiosInstance from "../../api/Api";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { HashLoader } from "react-spinners";
 import { FaStar, FaRegStar } from "react-icons/fa";
+import {useNavigate} from "react-router-dom"
 
 // debounce helper
 const debounce = (func, delay) => {
@@ -14,18 +15,11 @@ const debounce = (func, delay) => {
   };
 };
 
-const BookAppointment = () => {
+const AllDoc = () => {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
-  const [appointmentData, setAppointmentData] = useState({
-    date: "",
-    time: "",
-    reason: "",
-  });
-  const [selectedHospital, setSelectedHospital] = useState("");
-  const [booking, setBooking] = useState(false);
+ const navigate=useNavigate()
+ 
   const [search, setSearch] = useState("");
   const [coords, setCoords] = useState({ lat: null, long: null });
 
@@ -122,57 +116,10 @@ function convertTo12Hour(time) {
     debouncedSearch(e.target.value);
   };
 
-  const openModal = (doctor) => {
-    setSelectedDoctor(doctor);
-    setSelectedHospital("");
-    setModalOpen(true);
-  };
+ 
 
-  const closeModal = () => {
-    setModalOpen(false);
-    setSelectedDoctor(null);
-    setAppointmentData({ date: "", time: "", reason: "" });
-    setSelectedHospital("");
-  };
-
-  const handleChange = (e) => {
-    setAppointmentData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleBooking = async () => {
-    const { date, time, reason } = appointmentData;
-    if (!date || !time) return toast.error("📅 Select date and time");
-    if (!selectedHospital) return toast.error("🏥 Please select a hospital");
-
-    try {
-      setBooking(true);
-
-      await axiosInstance.post("/appointment/book", {
-        doctor: selectedDoctor._id,
-        date,
-        time,
-        reason,
-        hospital: selectedHospital,
-      });
-
-      toast.success("✅ Appointment booked successfully and Email sent to you !", {
-        icon: "🚀",
-        style: { fontSize: "1rem", fontWeight: "bold" },
-      });
-      closeModal();
-    } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.message || "❌ Booking failed!", {
-        icon: "⚠️",
-        style: { fontSize: "1rem", fontWeight: "bold" },
-      });
-    } finally {
-      setBooking(false);
-    }
-  };
+  
+ 
 
   const DoctorCardSkeleton = () => (
     <div className="animate-pulse bg-white rounded-2xl shadow-md p-6 text-center flex flex-col h-full">
@@ -212,9 +159,9 @@ function convertTo12Hour(time) {
   };
 
   return (
-    <div className="p-4 pt-20 -mt-16 max-w-7xl mx-auto">
+    <div className="p-4 pt-20 mt-8 max-w-7xl mx-auto ">
       <h1 className="text-3xl font-bold text-center mb-8">
-        📅🩺 Book an Appointment with Nearby Doctors
+        🩺 Doctor List
       </h1>
 
       {/* Search bar */}
@@ -285,10 +232,10 @@ function convertTo12Hour(time) {
         )}
 
         <button
-          onClick={() => openModal(doc)}
+          onClick={() =>navigate(`/insight/${doc._id}`) }
           className="mt-auto w-full bg-gradient-to-r from-green-500 to-teal-500 text-white py-2 rounded-xl shadow-md hover:from-green-600 hover:to-teal-600 transition-all duration-300"
         >
-          Book Appointment
+         See Insights
         </button>
       </motion.div>
     ))
@@ -300,89 +247,9 @@ function convertTo12Hour(time) {
 </div>
 
 
-      {/* Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-2xl shadow-2xl p-6 w-96 relative"
-          >
-            <button
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
-              onClick={closeModal}
-            >
-              ✖
-            </button>
-            <h2 className="text-2xl font-bold mb-4">
-              Book with {selectedDoctor.name}
-            </h2>
-
-            {/* Hospital Selection */}
-            <div className="mb-4">
-              <h3 className="font-semibold mb-2">Select Hospital:</h3>
-              {selectedDoctor.hospitals?.map((hosp) => (
-                <label
-                  key={hosp._id}
-                  className="flex items-center gap-2 mb-2 cursor-pointer"
-                >
-                  <input
-                    type="radio"
-                    name="hospital"
-                    value={hosp._id}
-                    checked={selectedHospital === hosp._id}
-                    onChange={() => setSelectedHospital(hosp._id)}
-                  />
-                  <span>
-                    {hosp.name} - {hosp.city}
-                  </span>
-                </label>
-              ))}
-            </div>
-
-            <div className="flex flex-col gap-4">
-              <input
-                type="date"
-                name="date"
-                value={appointmentData.date}
-                onChange={handleChange}
-                className="border p-2 rounded"
-              />
-              <input
-                type="time"
-                name="time"
-                value={appointmentData.time}
-                onChange={handleChange}
-                className="border p-2 rounded"
-              />
-              <textarea
-                name="reason"
-                placeholder="Reason (optional)"
-                value={appointmentData.reason}
-                onChange={handleChange}
-                className="border p-2 rounded"
-              />
-              <button
-                onClick={handleBooking}
-                disabled={booking}
-                className={
-                  booking
-                    ? "bg-gradient-to-r from-green-100 to-teal-100 text-white py-2 rounded-xl shadow-md"
-                    : "bg-gradient-to-r from-green-500 to-teal-500 text-white py-2 rounded-xl shadow-md hover:from-green-600 hover:to-teal-600"
-                }
-              >
-                {booking ? (
-                  <HashLoader size={25} color="teal" cssOverride={override} />
-                ) : (
-                  "Confirm Booking"
-                )}
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
+     
     </div>
   );
 };
 
-export default BookAppointment;
+export default AllDoc;

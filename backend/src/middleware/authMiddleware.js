@@ -53,6 +53,9 @@ export const protect = async (req, res, next) => {
     next();
   } catch (err) {
     console.error("Auth error:", err);
+     if (err.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Token expired" });
+    }
     return res.status(401).json({ message: "Not authorized, invalid token" });
   }
 };
@@ -95,6 +98,28 @@ export const isAdmin = async (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
+     if (err.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Token expired" });
+    }
+    res.status(401).json({ message: "Invalid token" });
+  }
+};
+
+export const isDoctor = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ message: "No token provided" });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const doctor = await Doctor.findById(decoded.id);
+    if (!doctor || doctor.role !== "doctor")
+      return res.status(403).json({ message: "Not authorized as doctor" });
+    req.doctor = doctor;
+    next();
+  } catch (err) {
+     if (err.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Token expired" });
+    }
     res.status(401).json({ message: "Invalid token" });
   }
 };

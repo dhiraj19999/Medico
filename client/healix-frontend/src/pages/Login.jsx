@@ -191,6 +191,9 @@ const LoginUser = async () => {
     <Link to="/register" className="text-teal-500 font-semibold text-sm mt-2 hover:underline">
     Don't have an account? Sign up here.
   </Link>
+   <Link to="/doctorlogin" className="text-teal-500 font-semibold text-sm mt-2 hover:underline">
+    Login as a Doctor.
+  </Link>
   </motion.form>
   
 </div>

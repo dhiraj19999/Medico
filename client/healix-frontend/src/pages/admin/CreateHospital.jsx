@@ -5,6 +5,7 @@ import imageCompression from "browser-image-compression";
 import { toast } from "react-toastify";
 import { HashLoader } from "react-spinners";
 
+
 const CreateHospital = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -204,5 +205,7 @@ const CreateHospital = () => {
     </div>
   );
 };
+
+
 
 export default CreateHospital;
