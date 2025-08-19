@@ -16,7 +16,34 @@ export default function DoctorAssign() {
   const [searchHospital, setSearchHospital] = useState("");
   const [assigning, setAssigning] = useState(false);
   const [searchDoctor, setSearchDoctor] = useState("");
+  
 
+const handleToggleAssignment = async (hospitalId, alreadyAssigned) => {
+  if (!selectedDoctor) return;
+
+  try {
+    setAssigning(true);
+    const res = await axiosInstance.post("/hospital/assigndoctor", {
+      doctorId: selectedDoctor._id,
+      hospitalIds: [hospitalId],
+      action: alreadyAssigned ? "remove" : "assign",
+    });
+    toast.success(res.data.message);
+
+    // Local state update
+    setSelectedHospitals(prev =>
+      alreadyAssigned
+        ? prev.filter(id => id !== hospitalId)
+        : [...prev, hospitalId]
+    );
+    fetchDoctors(); // doctor-hospital fresh data
+  } catch (err) {
+    console.error(err);
+    toast.error(err.response?.data?.message || "Operation failed");
+  } finally {
+    setAssigning(false);
+  }
+};
 
   // Fetch doctors
   // debounce helper
@@ -282,41 +309,35 @@ function convertTo12Hour(time) {
                     </div>
                   ) : (
                     <div className="max-h-64 overflow-y-auto">
-                      {filteredHospitals.map((h) => {
-                        const assigned = selectedHospitals.includes(h._id);
-                        return (
-                          <div
-                            key={h._id}
-                            className="flex justify-between items-center p-2 hover:bg-gray-100 rounded"
-                          >
-                            <div>
-                              {h.name} ({h.city})
-                            </div>
-                            <div>
-                              {assigned ? (
-                                <span className="text-green-600 flex items-center gap-1">
-                                  Assigned <FaCheckCircle />
-                                </span>
-                              ) : (
-                                <input
-                                  type="checkbox"
-                                  checked={assigned}
-                                  onChange={() => toggleSelectHospital(h._id)}
-                                />
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
+                   {filteredHospitals.map((h) => {
+  const assigned = selectedHospitals.includes(h._id);
+  return (
+    <div
+      key={h._id}
+      className="flex justify-between items-center p-2 hover:bg-gray-100 rounded"
+    >
+      <div>
+        {h.name} ({h.city})
+      </div>
+      <div>
+        <button
+          onClick={() => handleToggleAssignment(h._id, assigned)}
+          className={`px-3 py-1 rounded text-sm ${
+            assigned
+              ? "bg-red-500 text-white hover:bg-red-600"
+              : "bg-teal-500 text-white hover:bg-teal-600"
+          }`}
+        >
+          {assigned ? "Remove" : "Assign"} 
+        </button>
+      </div>
+    </div>
+  );
+})}
+
                     </div>
                   )}
-                  <button
-                    onClick={handleAssignHospitals}
-                    disabled={assigning}
-                    className="mt-3 w-full px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600"
-                  >
-                    {assigning ? "Assigning..." : "Assign Selected Hospitals"}
-                  </button>
+                 
                 </div>
               )}
             </motion.div>

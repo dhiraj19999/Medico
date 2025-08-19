@@ -108,15 +108,12 @@ export const getHospitalsByDoctor = async (req, res) => {
 
 export const assignDoctorToHospitals = async (req, res) => {
   try {
-    const { hospitalIds,doctorId } = req.body;
-    //const doctorId = req.user._id; // protect middleware se milta hai
+    const { hospitalIds, doctorId, action } = req.body;
 
-    // Validate
     if (!doctorId || !Array.isArray(hospitalIds) || hospitalIds.length === 0) {
       return res.status(400).json({ message: "Doctor ID and Hospital IDs are required" });
     }
 
-    // Doctor exist check
     const doctor = await Doctor.findById(doctorId);
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
@@ -126,23 +123,30 @@ export const assignDoctorToHospitals = async (req, res) => {
       const hospital = await Hospital.findById(hospId);
 
       if (hospital) {
-        // Hospital me doctor add karo (agar already nahi hai)
-        if (!hospital.doctors.includes(doctorId)) {
-          hospital.doctors.push(doctorId);
+        if (action === "assign") {
+          // ✅ Assign doctor to hospital
+          if (!hospital.doctors.includes(doctorId)) {
+            hospital.doctors.push(doctorId);
+            await hospital.save();
+          }
+          if (!doctor.hospitals.includes(hospId)) {
+            doctor.hospitals.push(hospId);
+          }
+        } else if (action === "remove") {
+          // ❌ Remove doctor from hospital
+          hospital.doctors = hospital.doctors.filter(did => did.toString() !== doctorId);
           await hospital.save();
-        }
 
-        // Doctor me hospital add karo (agar already nahi hai)
-        if (!doctor.hospitals.includes(hospId)) {
-          doctor.hospitals.push(hospId);
+          doctor.hospitals = doctor.hospitals.filter(hid => hid.toString() !== hospId);
         }
       }
     }
 
-    // Doctor save (hospital list updated)
     await doctor.save();
 
-    res.status(200).json({ message: "Doctor assigned to hospitals successfully" });
+    res.status(200).json({
+      message: `Doctor ${action === "assign" ? "assigned to" : "removed from"} hospitals successfully`
+    });
   } catch (error) {
     console.error("Error assigning doctor to hospitals:", error);
     res.status(500).json({ message: "Internal Server Error" });

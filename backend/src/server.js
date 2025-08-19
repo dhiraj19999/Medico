@@ -6,7 +6,7 @@ import https from 'https';
 import fs from 'fs';
 import path from "path";
 
-
+import "./scheduler/autoCompleteAppointments.js"
 import cors from 'cors';
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';

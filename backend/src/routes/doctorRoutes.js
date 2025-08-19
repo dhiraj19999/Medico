@@ -1,5 +1,6 @@
 import express from "express";
-import { registerDoctor, loginDoctor,getNearbyDoctors,searchDoctors,getAllDoctors,getDoctorInsights,getDoctorAdminsideInsights} from "../controllers/doctorController.js";
+import { registerDoctor, loginDoctor,getNearbyDoctors
+    ,searchDoctors,getAllDoctors,getDoctorInsights,getDoctorAdminsideInsights,deleteDoc} from "../controllers/doctorController.js";
 import upload from "../middleware/upload.js"; // for Cloudinary image upload
 import { isAdmin,protect } from "../middleware/authMiddleware.js";
 
@@ -12,4 +13,5 @@ router.post("/search",protect, searchDoctors); // all
 router.get("/all", protect, getAllDoctors); // for all
 router.get("/insights",protect, getDoctorInsights);
 router.get("/adminsideinsights/:doctorId",protect, isAdmin, getDoctorAdminsideInsights);
+router.delete("/delete/:id",protect, isAdmin, deleteDoc);
 export default router;

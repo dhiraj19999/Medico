@@ -271,6 +271,17 @@ export const getAllDoctors=async(req,res)=>{
 
 
 
+export const deleteDoc=async(req,res)=>{
+
+  try{
+    const user=await Doctor.findByIdAndDelete(req.params.id);
+    res.json({message:"User deleted Succesfully"});
+  }catch(err){
+    res.status(500).json({message:err.message});
+  }
+}
+
+
 
 
 

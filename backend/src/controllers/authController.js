@@ -185,3 +185,76 @@ export const logoutUser = (req, res) => {
 };
 
 
+export const getAlluser=async(req,res)=>{
+  try{
+    const users=await User.find();
+    res.json(users);
+  }catch(err){
+    res.status(500).json({message:err.message});
+  }
+}
+
+
+export const deleteUser=async(req,res)=>{
+  try{
+    const user=await User.findByIdAndDelete(req.params.id);
+    res.json({message:"User deleted Succesfully"});
+  }catch(err){
+    res.status(500).json({message:err.message});
+  }
+}
+
+
+export const searchUser = async (req, res) => {
+  try {
+    const { search } = req.body;
+
+    if (!search || search.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: "❌ Please enter something to search",
+      });
+    }
+
+    // Trim and lowercase
+    const searchValue = search.trim();
+
+    let query = {};
+
+    if (/^\d+$/.test(searchValue)) {
+      // Only digits → treat as pincode
+      query["pincode"] = { $regex: searchValue, $options: "i" };
+    } else {
+      // String → search in multiple fields
+      query = {
+        $or: [
+          { 
+            "name": { $regex: searchValue, $options: "i" } },
+          { "city": { $regex: searchValue, $options: "i" } },
+          { "state": { $regex: searchValue, $options: "i" } },
+        ],
+      };
+    }
+
+    const users = await User.find(query);
+
+    if (!users.length) {
+      return res.status(404).json({
+        success: false,
+        message: "No users found matching your search",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      count: users.length,
+      data: users,
+    });
+  } catch (error) {
+    console.error("Search error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while searching doctors",
+    });
+  }
+};

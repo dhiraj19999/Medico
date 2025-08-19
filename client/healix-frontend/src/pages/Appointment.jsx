@@ -47,6 +47,7 @@ const handleSubmitFeedback = async (appt) => {
     };
     const res = await axiosInstance.post("/feedback/add", body);
     toast.success("Feedback submitted successfully!");
+    fetchAppointments();
     
     // Update appointment card locally
     setAppointments((prev) => prev.map(a => 

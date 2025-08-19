@@ -139,6 +139,11 @@ const Navbar = () => {
                     <Link to="/all-doc" className="block px-4 py-2 text-sm text-gray-950 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">All Doctors</Link>
                   </li>
                 )}
+                {user?.role === "admin" && (
+                  <li>
+                    <Link to="/allusers" className="block px-4 py-2 text-sm text-gray-950 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">All Users</Link>
+                  </li>
+                )}
 
                 <li>
                   <button
