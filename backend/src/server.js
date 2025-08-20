@@ -30,7 +30,7 @@ connectDB();
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173","https://healix-frontend-kappa.vercel.app/"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -44,10 +44,12 @@ const options = {
 };
 
 // Preflight handle
-app.options("*", cors({
-   origin: "http://localhost:5173",
-  credentials: true,
-}));
+res.cookie("token", token, {
+  httpOnly: true,
+  secure: true,        // render पर https है तो ज़रूरी
+  sameSite: "none",    // cross-origin allow करना है
+});
+
 app.use(express.json());
 app.use(cookieParser());
 app.use('/api/auth', authRoutes);

@@ -19,7 +19,101 @@ import {
   FaChevronUp,
 } from "react-icons/fa";
 import doctor from "../assets/doctor.png";
-import doctor2 from "../assets/doctor2.webp";
+import doctor2 from "../assets/doctor2.webp";  
+// Cartoon Illustrations
+const heroImages = [doctor, doctor2];
+const features = [
+  {
+    title: "Trusted Doctor Directory",
+    desc: "Find the right doctor quickly from hundreds of verified professionals near you. Filter by specialty, location, and reviews — so you get expert care you can trust.",
+    icon: <FaUserMd />,
+    img: "https://img.freepik.com/free-vector/doctor-checklist-concept-illustration_114360-1898.jpg",
+  },
+  {
+    title: "Easy Appointment Booking",
+    desc: "Book in-person or video consultations in just a few taps. Skip the waiting room — get timely care from the comfort of your home or on the go.",
+    icon: <FaCalendarCheck />,
+    img: "https://img.freepik.com/free-vector/appointment-booking-concept-illustration_114360-5169.jpg",
+  },
+  {
+    title: "Your Health, All in One Place",
+    desc: "Keep your medical records, appointment history, and reports organized safely. Access your health info anytime, anywhere — because your health data should be easy to manage.",
+    icon: <FaFileMedical />,
+    img: "https://img.freepik.com/free-vector/medical-record-concept-illustration_114360-1683.jpg",
+  },
+  {
+    title: "Communicate in Your Language",
+    desc: "Healix supports Hindi, Marathi, and more — so you can use the app easily in your preferred language. Healthcare should be simple and inclusive.",
+    icon: <FaLanguage />,
+    img: "https://img.freepik.com/free-vector/language-learning-concept-illustration_114360-7413.jpg",
+  },
+  {
+    title: "Never Miss an Appointment",
+    desc: "Get smart reminders and personalized health tips sent straight to your phone — stay on top of your health without stress.",
+    icon: <FaBell />,
+    img: "https://img.freepik.com/free-vector/notification-concept-illustration_114360-2566.jpg",
+  },
+];
+
+const intermediateFeatures = [
+  {
+    title: "Consult Your Doctor from Anywhere",
+    desc: "Connect instantly with your doctor via video or audio calls. No travel needed — get expert advice wherever you are.",
+    icon: <FaVideo />,
+    img: "https://img.freepik.com/free-vector/telemedicine-concept-illustration_114360-8905.jpg",
+  },
+  {
+    title: "Digital Prescriptions at Your Fingertips",
+    desc: "Receive and manage prescriptions digitally. No more lost papers — access your medicines info anytime.",
+    icon: <FaPrescriptionBottleAlt />,
+    img: "https://img.freepik.com/free-vector/online-pharmacy-concept-illustration_114360-8350.jpg",
+  },
+  {
+    title: "Book Lab Tests Conveniently",
+    desc: "Schedule pathology tests online and get results directly on Healix. Stay informed and in control of your health journey.",
+    icon: <FaFlask />,
+    img: "https://img.freepik.com/free-vector/medical-research-concept-illustration_114360-8922.jpg",
+  },
+  {
+    title: "Find Nearby Hospitals & Pharmacies",
+    desc: "Automatically discover healthcare centers and medical stores close to you. Emergency or routine — help is always nearby.",
+    icon: <FaMapMarkerAlt />,
+    img: "https://img.freepik.com/free-vector/hospital-building-concept-illustration_114360-1694.jpg",
+  },
+  {
+    title: "Easy & Secure Payments",
+    desc: "Pay hassle-free using UPI. Your bookings, consultations, and purchases all in one trusted platform.",
+    icon: <FaMoneyCheckAlt />,
+    img: "https://img.freepik.com/free-vector/online-payment-concept-illustration_114360-2385.jpg",
+  },
+];
+
+const advancedFeatures = [
+  {
+    title: "AI That Understands Your Health Reports",
+    desc: "Upload reports and let Healix’s AI highlight key insights — so you get clearer understanding without medical jargon.",
+    icon: <FaRobot />,
+    img: "https://img.freepik.com/free-vector/artificial-intelligence-concept-illustration_114360-8264.jpg",
+  },
+  {
+    title: "Instant Medicine Identification",
+    desc: "Scan any pill to instantly learn about its uses and precautions — take medicine safely with confidence.",
+    icon: <FaPills />,
+    img: "https://img.freepik.com/free-vector/medicine-bottle-concept-illustration_114360-7626.jpg",
+  },
+  {
+    title: "Personalized Health Tips Just for You",
+    desc: "Get AI-powered advice tailored to your unique health profile — simple tips that make a real difference.",
+    icon: <FaChartLine />,
+    img: "https://img.freepik.com/free-vector/healthy-habits-concept-illustration_114360-7454.jpg",
+  },
+  {
+    title: "Early Alerts to Keep You Safe",
+    desc: "Receive warnings about potential health risks based on your symptoms and history — be proactive, not reactive.",
+    icon: <FaHeart />,
+    img: "https://img.freepik.com/free-vector/medical-protection-concept-illustration_114360-1713.jpg",
+  },
+];
 
 // Animation Variants
 const variants = {
@@ -61,101 +155,6 @@ const faqs = [
   },
 ];
 
-const heroImages = [doctor, doctor2];
-
-const features = [
-  {
-    title: "Trusted Doctor Directory",
-    desc: "Find the right doctor quickly from hundreds of verified professionals near you. Filter by specialty, location, and reviews — so you get expert care you can trust.",
-    icon: <FaUserMd />,
-    img: doctor2,
-  },
-  {
-    title: "Easy Appointment Booking",
-    desc: "Book in-person or video consultations in just a few taps. Skip the waiting room — get timely care from the comfort of your home or on the go.",
-    icon: <FaCalendarCheck />,
-    img: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=600&q=60",
-  },
-  {
-    title: "Your Health, All in One Place",
-    desc: "Keep your medical records, appointment history, and reports organized safely. Access your health info anytime, anywhere — because your health data should be easy to manage.",
-    icon: <FaFileMedical />,
-    img: "https://images.unsplash.com/photo-1580281657497-f21e30b7554c?auto=format&fit=crop&w=600&q=60",
-  },
-  {
-    title: "Communicate in Your Language",
-    desc: "Healix supports Hindi, Marathi, and more — so you can use the app easily in your preferred language. Healthcare should be simple and inclusive.",
-    icon: <FaLanguage />,
-    img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=60",
-  },
-  {
-    title: "Never Miss an Appointment",
-    desc: "Get smart reminders and personalized health tips sent straight to your phone — stay on top of your health without stress.",
-    icon: <FaBell />,
-    img: "https://images.unsplash.com/photo-1556741533-f6acd647d2fb?auto=format&fit=crop&w=600&q=60",
-  },
-];
-
-const intermediateFeatures = [
-  {
-    title: "Consult Your Doctor from Anywhere",
-    desc: "Connect instantly with your doctor via video or audio calls. No travel needed — get expert advice wherever you are.",
-    icon: <FaVideo />,
-    img: "https://images.unsplash.com/photo-1588776814546-f0d3ca8db3f2?auto=format&fit=crop&w=600&q=60",
-  },
-  {
-    title: "Digital Prescriptions at Your Fingertips",
-    desc: "Receive and manage prescriptions digitally. No more lost papers — access your medicines info anytime.",
-    icon: <FaPrescriptionBottleAlt />,
-    img: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=600&q=60",
-  },
-  {
-    title: "Book Lab Tests Conveniently",
-    desc: "Schedule pathology tests online and get results directly on Healix. Stay informed and in control of your health journey.",
-    icon: <FaFlask />,
-    img: "https://images.unsplash.com/photo-1580281657477-e220812a5a1d?auto=format&fit=crop&w=600&q=60",
-  },
-  {
-    title: "Find Nearby Hospitals & Pharmacies",
-    desc: "Automatically discover healthcare centers and medical stores close to you. Emergency or routine — help is always nearby.",
-    icon: <FaMapMarkerAlt />,
-    img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=60",
-  },
-  {
-    title: "Easy & Secure Payments",
-    desc: "Pay hassle-free using UPI. Your bookings, consultations, and purchases all in one trusted platform.",
-    icon: <FaMoneyCheckAlt />,
-    img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=60",
-  },
-];
-
-const advancedFeatures = [
-  {
-    title: "AI That Understands Your Health Reports",
-    desc: "Upload reports and let Healix’s AI highlight key insights — so you get clearer understanding without medical jargon.",
-    icon: <FaRobot />,
-    img: "https://images.unsplash.com/photo-1581091870623-e39c56d6d299?auto=format&fit=crop&w=600&q=60",
-  },
-  {
-    title: "Instant Medicine Identification",
-    desc: "Scan any pill to instantly learn about its uses and precautions — take medicine safely with confidence.",
-    icon: <FaPills />,
-    img: "https://images.unsplash.com/photo-1580281657510-2e6ae4e26701?auto=format&fit=crop&w=600&q=60",
-  },
-  {
-    title: "Personalized Health Tips Just for You",
-    desc: "Get AI-powered advice tailored to your unique health profile — simple tips that make a real difference.",
-    icon: <FaChartLine />,
-    img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=60",
-  },
-  {
-    title: "Early Alerts to Keep You Safe",
-    desc: "Receive warnings about potential health risks based on your symptoms and history — be proactive, not reactive.",
-    icon: <FaHeart />,
-    img: "https://images.unsplash.com/photo-1573164574392-6fa6a1d760b2?auto=format&fit=crop&w=600&q=60",
-  },
-];
-
 // Welcome Hero Section
 const WelcomeHero = () => (
   <section className="min-h-screen flex flex-col md:flex-row items-center justify-center px-6 md:px-24 bg-gradient-to-r from-teal-100 to-white gap-12 max-w-screen-xl mx-auto overflow-hidden">
@@ -185,7 +184,7 @@ const WelcomeHero = () => (
   </section>
 );
 
-// Reusable Feature Section with animation and image
+// Reusable Feature Section
 const FeatureSection = ({ title, items }) => (
   <section className="max-w-screen-xl mx-auto py-24 px-4 md:px-0 space-y-24">
     <h2 className="text-4xl md:text-5xl font-extrabold text-center text-teal-900 mb-16">
@@ -198,9 +197,7 @@ const FeatureSection = ({ title, items }) => (
       return (
         <motion.div
           key={idx}
-          className={`flex flex-col md:flex-row items-center gap-12 ${
-            isEven ? "" : "md:flex-row-reverse"
-          }`}
+          className={`flex flex-col md:flex-row items-center gap-12 ${isEven ? "" : "md:flex-row-reverse"}`}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
@@ -209,7 +206,7 @@ const FeatureSection = ({ title, items }) => (
           <motion.img
             src={feature.img}
             alt={feature.title}
-            className="md:w-1/2 rounded-xl shadow-xl max-w-full"
+            className="md:w-1/2 rounded-xl shadow-xl max-w-full bg-white"
             variants={variant}
           />
 
@@ -226,7 +223,7 @@ const FeatureSection = ({ title, items }) => (
   </section>
 );
 
-// FAQ Accordion Section
+// FAQ Section
 const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState(null);
 
@@ -241,10 +238,7 @@ const FAQSection = () => {
       </h2>
       <div className="space-y-4 max-w-3xl mx-auto">
         {faqs.map((faq, i) => (
-          <div
-            key={i}
-            className="border border-teal-300 rounded-lg shadow-sm"
-          >
+          <div key={i} className="border border-teal-300 rounded-lg shadow-sm">
             <button
               onClick={() => toggleIndex(i)}
               className="w-full px-6 py-4 flex justify-between items-center text-left text-teal-800 font-semibold text-lg hover:bg-teal-50 transition"
@@ -298,10 +292,9 @@ const CTASection = () => (
   </section>
 );
 
-// Full HomePage Component
 export default function HomePage() {
   return (
-   <main className="bg-white min-h-screen overflow-x-hidden mt-5">
+    <main className="bg-white min-h-screen overflow-x-hidden mt-5">
       <WelcomeHero />
       <FeatureSection title="Core Features – MVP Ready" items={features} />
       <FeatureSection title="Intermediate Features" items={intermediateFeatures} />
