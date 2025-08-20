@@ -44,11 +44,7 @@ const options = {
 };
 
 // Preflight handle
-res.cookie("token", token, {
-  httpOnly: true,
-  secure: true,        // render पर https है तो ज़रूरी
-  sameSite: "none",    // cross-origin allow करना है
-});
+
 
 app.use(express.json());
 app.use(cookieParser());
