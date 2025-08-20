@@ -19,6 +19,9 @@ export const registerUser = async (req, res) => {
      gender,
       dateOfBirth,
       address,
+      city,
+      state,
+      pincode
      
     } = req.body;
 
@@ -90,7 +93,11 @@ const start = Date.now();
       avatar: avatarUrl,
       dateOfBirth,
       address,
-      subscription: "free"
+      subscription: "free",
+      city,
+      state,
+      pincode
+     
     });
 
     // 🔐 Set token in cookie
@@ -258,3 +265,70 @@ export const searchUser = async (req, res) => {
     });
   }
 };
+
+
+export const updateUserProfile = async (req, res) => {
+  try {
+    const doctorId = req.params.id;
+
+    const { 
+      name,  email, phone, 
+      gender,    password,
+      // address fields separately
+      city, state, country, pincode ,address
+    } = req.body;
+
+    // doctor find karo
+    const user = await User.findById(doctorId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+  let avatarUrl = "";
+    if (req.file) {
+      const base64Str = req.file.buffer.toString("base64");
+      const dataUri = `data:${req.file.mimetype};base64,${base64Str}`;
+      const result = await cloudinary.uploader.upload(dataUri, {
+        folder: "user-profiles",
+        width: 400, height: 400, crop: "limit",
+        fetch_format: "auto", quality: "auto",
+      });
+      avatarUrl = result.secure_url;
+    }
+    // ✅ Normal profile fields update
+    if (name) user.name = name;
+   
+    if (email) user.email = email;
+    if (phone) user.phone = phone;
+    if (gender) user.gender = gender;
+    if(address) user.address = address;
+    if (avatarUrl) user.avatar = avatarUrl;
+   
+
+    // ✅ Address update (nested object)
+    if (city) user.city = city;
+    if (state) user.state = state;
+    if (country) user.country = country;
+    if (pincode) user.pincode = pincode;
+
+    // ✅ Password update (secure)
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user,
+    });
+  } catch (error) {
+    console.error("Update profile error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+    
+
+  

@@ -161,11 +161,11 @@ export const downloadReport = async (req, res) => {
     res.set({
       "Content-Type": report.contentType,
       "Content-Disposition": `attachment; filename="${report.filename}"`,
-      "Content-Length": report.file.length,   // 👈 ensure size header
+      "Content-Length": report.file.length,
     });
 
-    // 👇 Buffer ko binary tarike se bhejna
-    res.end(report.file, "binary");
+    // Correct way: directly send Buffer
+    res.send(report.file);
   } catch (err) {
     console.error("Download error:", err);
     res.status(500).json({ error: "Download failed" });

@@ -611,3 +611,73 @@ Return JSON with fields: { recognitionNote, riskAnalysis, comparison, summary, r
   }
 };
 
+
+
+
+
+// 🟢 Update Doctor Profile (including password)
+export const updateDoctorProfile = async (req, res) => {
+  try {
+    const doctorId = req.params.id;
+
+    const { 
+      name, specialization, qualifications, experience, email, phone, 
+      gender,  availableDays, availableTime, password,
+      // address fields separately
+      city, state, country, pincode 
+    } = req.body;
+
+    // doctor find karo
+    const doctor = await Doctor.findById(doctorId);
+    if (!doctor) {
+      return res.status(404).json({ success: false, message: "Doctor not found" });
+    }
+  let avatarUrl = "";
+    if (req.file) {
+      const base64Str = req.file.buffer.toString("base64");
+      const dataUri = `data:${req.file.mimetype};base64,${base64Str}`;
+      const result = await cloudinary.uploader.upload(dataUri, {
+        folder: "user-profiles",
+        width: 400, height: 400, crop: "limit",
+        fetch_format: "auto", quality: "auto",
+      });
+      avatarUrl = result.secure_url;
+    }
+    // ✅ Normal profile fields update
+    if (name) doctor.name = name;
+    if (specialization) doctor.specialization = specialization;
+    if (qualifications) doctor.qualifications = qualifications;
+    if (experience) doctor.experience = experience;
+    if (email) doctor.email = email;
+    if (phone) doctor.phone = phone;
+    if (gender) doctor.gender = gender;
+    if (avatarUrl) doctor.avatar = avatarUrl;
+    if (availableDays) doctor.availableDays = availableDays;
+    if (availableTime) doctor.availableTime = availableTime;
+
+    // ✅ Address update (nested object)
+    if (city) doctor.address.city = city;
+    if (state) doctor.address.state = state;
+    if (country) doctor.address.country = country;
+    if (pincode) doctor.address.pincode = pincode;
+
+    // ✅ Password update (secure)
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      doctor.password = await bcrypt.hash(password, salt);
+    }
+
+    await doctor.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      doctor,
+    });
+  } catch (error) {
+    console.error("Update profile error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+    

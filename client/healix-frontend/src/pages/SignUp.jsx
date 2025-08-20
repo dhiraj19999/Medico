@@ -5,8 +5,9 @@ import { useNavigate } from "react-router-dom";
 import signlogo from "../assets/sign.gif";
 import {
   FaUser, FaEnvelope, FaLock, FaPhone, FaMapMarkerAlt,
-  FaBirthdayCake, FaImage, FaVenusMars
+  FaBirthdayCake, FaImage, FaVenusMars,FaCity
 } from "react-icons/fa";
+import { TbMapPinCode } from "react-icons/tb";
 import { HashLoader } from "react-spinners";
 import axiosInstance from "../api/Api";
 import { toast } from "react-toastify";
@@ -22,6 +23,9 @@ export default function SignupForm() {
     dateOfBirth: "",
     address: "",
     avatar: null,
+    state:"",
+    city:"",
+    pincode:""
   });
 const navigate = useNavigate();
   const [errors, setErrors] = useState({});
@@ -42,6 +46,9 @@ const override = {
     if (!formData.dateOfBirth) newErrors.dateOfBirth = "Date of birth required";
     if (!formData.address) newErrors.address = "Address is required";
     if (!formData.avatar) newErrors.avatar = "Avatar is required";
+    if(!formData.state) newErrors.state = "State is required";
+   if(!formData.city) newErrors.city = "City is required";
+   if(!formData.pincode) newErrors.pincode="Pincode is required"
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -182,6 +189,9 @@ console.log("Compressed file size (KB):", compressedFile.size / 1024);
 
         {/* DOB */}
         <InputWithIcon Icon={FaBirthdayCake} name="dateOfBirth" value={formData.dateOfBirth} handleChange={handleChange} error={errors.dateOfBirth} type="date" />
+         < InputWithIcon Icon={FaCity} name="state" value={formData.state} handleChange={handleChange} error={errors.state} type="text" placeholder={"State"} />
+          <InputWithIcon Icon={FaCity} name="city" value={formData.city} handleChange={handleChange} error={errors.city} type="text" placeholder={"City"} />
+           <InputWithIcon Icon={TbMapPinCode} name="pincode" value={formData.pincode} handleChange={handleChange} error={errors.pincode} type="text"  placeholder={"PinCode"}/>
 
         {/* Address */}
         <InputWithIcon Icon={FaMapMarkerAlt} name="address" placeholder="Address" value={formData.address} handleChange={handleChange} error={errors.address} isFullWidth />

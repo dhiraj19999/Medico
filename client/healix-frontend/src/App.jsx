@@ -32,7 +32,8 @@ import DoctorInsights from './pages/doctor/DoctorInsight.jsx';
 import AllDoc from './pages/admin/AllDoctors.jsx';
 import DOCInsight from './pages/admin/DocInsight.jsx';
 import AllUsers from './pages/admin/AllUsers.jsx';
-
+import DoctorProfile from './pages/doctor/DoctorUpdate.jsx';
+import UserProfile from './pages/UserProfile.jsx';
 function App() {
   const setUser = useUserStore((s) => s.setUser);
   const setLoadingUser = useUserStore((s) => s.setLoadingUser);
@@ -81,6 +82,8 @@ function App() {
        <Route path="/all-doc" element={<AdminPrivate><AllDoc/></AdminPrivate>} />
        <Route path="/insight/:docId" element={<AdminPrivate><DOCInsight/></AdminPrivate>} />
        <Route path="/allusers" element={<AdminPrivate><AllUsers/></AdminPrivate>}/>
+       <Route path="/docprofile" element={<DocPrivate><DoctorProfile/></DocPrivate>}/>
+       <Route  path="/userprofile" element={<PrivateRoute><UserProfile/></PrivateRoute>}    />
       </Routes>
 
       <Footer />
