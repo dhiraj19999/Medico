@@ -39,7 +39,7 @@ const Navbar = () => {
     try {
       await axiosInstance.post('/auth/logout');
       clearUser();
-      window.location.href = "/login";
+      window.location.href = "/";
       toast.success("✅ Logout successful!", {
         icon: "🚀",
         style: { fontSize: "1rem", fontWeight: "bold" },
