@@ -5,7 +5,8 @@ import Appointment from "../models/Appointment.js";
 import fs from 'fs';
 import path from 'path';
 
-
+import chromium from "@sparticuz/chromium";
+import puppeteer from "puppeteer-core";
 
 import dayjs from "dayjs";
 import { config } from "dotenv";
@@ -107,9 +108,6 @@ Give a friendly and clear health risk analysis with lifestyle tips. Reply in the
 };
 */
 
-import puppeteer from "puppeteer-core";
-import chromium from "@sparticuz/chromium";
-
 export const getHealthReportPdfById = async (req, res) => {
   try {
     const reportId = req.params.reportId;
@@ -119,49 +117,108 @@ export const getHealthReportPdfById = async (req, res) => {
       return res.status(404).json({ message: "Health report not found." });
     }
 
+    // ✅ Logo as base64
     const logoPath = "https://res.cloudinary.com/dhirajgarad/image/upload/v1755767658/ChatGPT_Image_Aug_3_2025_09_19_48_PM_khs8rf.png";
+    ///const logoData = fs.readFileSync(logoPath).toString("base64");
 
+    // ✅ HTML
     const html = `
       <html>
+        <head>
+          <meta charset="UTF-8" />
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              padding: 20px;
+              line-height: 1.6;
+              color: #333;
+              background: #fff;
+            }
+            .header {
+              text-align: center;
+              margin-bottom: 30px;
+            }
+            .logo {
+              max-width: 150px;
+              margin-bottom: 10px;
+            }
+            .title {
+              font-size: 26px;
+              font-weight: bold;
+              color: teal;
+            }
+            .section {
+              margin-bottom: 15px;
+              font-size: 14px;
+            }
+            strong {
+              color: #2c3e50;
+            }
+          </style>
+        </head>
         <body>
-          <div style="text-align:center">
-            <img src="${logoPath}" width="120"/>
-            <h2>Healix Health Report 🩺</h2>
+          <div class="header">
+            <img src="${logoPath}" class="logo" />
+            <div class="title">Healix Health Report 🩺</div>
           </div>
-          <p><strong>Name:</strong> ${report.user.name}</p>
-          <p><strong>Age:</strong> ${report.age}</p>
-          <p><strong>Gender:</strong> ${report.gender}</p>
-          <p><strong>BP:</strong> ${report.bp}</p>
-          <p><strong>Sugar:</strong> ${report.sugar}</p>
+
+          <div class="section"><strong>👤 Name:</strong> ${report.user.name}</div>
+          <div class="section"><strong>📅 Date:</strong> ${new Date(report.createdAt).toLocaleString()}</div>
+          <div class="section">
+            <strong>🧬 Age:</strong> ${report.age} <br/>
+            <strong>🚻 Gender:</strong> ${report.gender} <br/>
+            <strong>🩸 BP:</strong> ${report.bp} <br/>
+            <strong>🍬 Sugar:</strong> ${report.sugar} <br/>
+            <strong>🧈 Cholesterol:</strong> ${report.cholesterol} <br/>
+            <strong>❤️ Heart Rate:</strong> ${report.heartRate} <br/>
+            <strong>⚖️ Weight:</strong> ${report.weight} kg <br/>
+            <strong>📏 Height:</strong> ${report.height} cm <br/>
+            <strong>🤒 Symptoms:</strong> ${report.symptoms}
+          </div>
+
+          <div class="section">
+            <strong>🧠 AI Health Analysis:</strong><br/>
+            ${report.riskResult || "Analysis not available"}
+          </div>
+
+          <div class="section">
+            <em>📌 Generated on: ${new Date().toLocaleString()}</em>
+          </div>
         </body>
       </html>
     `;
 
-    // ✅ Puppeteer launch with chromium (Render compatible)
-    const browser = await puppeteer.launch({
-      args: chromium.args,
-     defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
-      headless: chromium.headless,
-    });
+    // ✅ Puppeteer PDF
+     const browser = await puppeteer.launch({
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath(),
+    headless: chromium.headless,
+  });
+    
 
     const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: "load" });
+   await page.setContent(html, { waitUntil: "networkidle0" }); // wait until all images load
+  // await page.setContent(html, { waitUntil: "load", timeout: 0 });
 
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
+      margin: { top: "30px", bottom: "30px", left: "20px", right: "20px" },
     });
 
     await browser.close();
-
+        
+    // ✅ Response headers
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", `attachment; filename="Healix-HealthReport-${Date.now()}.pdf"`);
-    return res.end(pdfBuffer);
+   return res.end(pdfBuffer);
 
-  } catch (err) {
-    console.error("PDF Generation Error:", err);
-    res.status(500).json({ error: "Failed to generate PDF report." });
+  } catch (error) {
+    console.error("PDF Generation Error:", error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: "Failed to generate PDF report." });
+    }
   }
 };
 
