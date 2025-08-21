@@ -184,7 +184,14 @@ export const getUserProfile = async (req, res) => {
 
 export const logoutUser = (req, res) => {
   try {
-    res.clearCookie("token");
+   res.clearCookie("token", {
+  httpOnly: true,
+  secure: true,   // vercel pe https hota hai
+  sameSite: "None"
+ 
+});
+res.json({ message: "Logged out successfully" });
+
     res.json({ message: "Logged out successfully" });
   } catch (err) {
     console.error("Logout Error:", err);
