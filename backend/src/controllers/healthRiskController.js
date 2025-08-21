@@ -140,6 +140,7 @@ export const getHealthReportPdfById = async (req, res) => {
     // ✅ Puppeteer launch with chromium (Render compatible)
     const browser = await puppeteer.launch({
       args: chromium.args,
+     defaultViewport: chromium.defaultViewport,
       executablePath: await chromium.executablePath(),
       headless: chromium.headless,
     });
