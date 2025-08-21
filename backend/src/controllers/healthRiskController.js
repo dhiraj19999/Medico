@@ -117,7 +117,7 @@ export const getHealthReportPdfById = async (req, res) => {
     }
 
     // ✅ Logo as base64
-    const logoPath = path.resolve("src/public/images/Healix.png");
+    const logoPath = "https://res.cloudinary.com/dhirajgarad/image/upload/v1755767658/ChatGPT_Image_Aug_3_2025_09_19_48_PM_khs8rf.png";
     const logoData = fs.readFileSync(logoPath).toString("base64");
 
     // ✅ HTML
@@ -157,7 +157,7 @@ export const getHealthReportPdfById = async (req, res) => {
         </head>
         <body>
           <div class="header">
-            <img src="data:image/png;base64,${logoData}" class="logo" />
+            <img src="data:image/png;base64,${logoPath}" class="logo" />
             <div class="title">Healix Health Report 🩺</div>
           </div>
 
