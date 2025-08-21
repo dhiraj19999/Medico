@@ -4,7 +4,8 @@ import axios from "axios";
 
 
 const axiosInstance = axios.create({
- baseURL: "https://medico-ha7q.onrender.com/api",
+// baseURL: "https://medico-ha7q.onrender.com/api",
+baseURL:"http://localhost:5000/api",
  // change to your backend API
   withCredentials: true, // 🧁 IMPORTANT: allows sending cookies
 });

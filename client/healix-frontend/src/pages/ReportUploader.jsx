@@ -35,7 +35,7 @@ export default function ReportUploader() {
   const [loadingInitial, setLoadingInitial] = useState(true); // For initial fetch loading
   const [message, setMessage] = useState("");
   const cardsRef = useRef([]);
-  const [buttonload,setButtonload]=useState("")
+  const [buttonload,setButtonload]=useState({type:"",id:""})
 
   useEffect(() => {
     fetchReports();
@@ -43,7 +43,7 @@ export default function ReportUploader() {
 
 
 const deleteReport = async (id) => {
-  setButtonload("delete")
+  setButtonload({type:"delete",id:id})
   try {
     await axiosInstance.delete(`/reports/${id}`);
     toast.success("✅ Report deleted successfully!", {
@@ -136,7 +136,7 @@ const deleteReport = async (id) => {
   };
 
   const downloadReport = async (id) => {
-    setButtonload("original");
+    setButtonload({type:"original",id:id});
     try {
       const res = await axiosInstance.get(`/reports/download/${id}`, {
         responseType: "blob",
@@ -179,7 +179,7 @@ const deleteReport = async (id) => {
   };
 
   const downloadSummary = async (id, filename) => {
-    setButtonload("summary");
+    setButtonload({type:"summary",id:id});
     try {
       const res = await axiosInstance.get(`/reports/summary/${id}`, {
         responseType: "text",
@@ -294,28 +294,28 @@ const deleteReport = async (id) => {
    <div className="grid grid-cols-3 gap-2 mt-1">
   <button
     onClick={() => downloadReport(report._id)}
-    className={`${buttonload=="original"?"from-green-100 to-teal-100":"bg-teal-500 hover:bg-teal-600"} text-white px-2 py-2 rounded shadow transition-colors duration-300 text-sm`}
+    className={`${buttonload.type=="original"&&buttonload.id==report._id?"from-green-100 to-teal-100":"bg-teal-500 hover:bg-teal-600"} text-white px-2 py-2 rounded shadow transition-colors duration-300 text-sm`}
     title="Download Original Report"
   >
-      {buttonload=="original"?<HashLoader color="teal" size={30} cssOverride={override} />:"⬇ Original"}
+      {buttonload.type=="original"&&buttonload.id==report._id?<HashLoader color="teal" size={30} cssOverride={override} />:"⬇ Original"}
   </button>
 
   <button
     onClick={() => downloadSummary(report._id, report.filename)}
-    className={`${buttonload=="summary"?"from-green-100 to-teal-100":"bg-teal-500 hover:bg-teal-600"} text-white px-2 py-2 rounded shadow transition-colors duration-300 text-sm`}
+    className={`${buttonload.type=="summary"&&buttonload.id==report._id?"from-green-100 to-teal-100":"bg-teal-500 hover:bg-teal-600"} text-white px-2 py-2 rounded shadow transition-colors duration-300 text-sm`}
     title="Download Summary"
   >
    
    
-  {  buttonload=="summary"?<HashLoader color="teal" size={30} cssOverride={override} />:  "📝 Summary" }
+  { buttonload.type=="summary"&&buttonload.id==report._id?<HashLoader color="teal" size={30} cssOverride={override} />:  "📝 Summary" }
   </button>
 
   <button
     onClick={() => deleteReport(report._id)}
-    className={`${buttonload=="delete"?"from-green-100 to-teal-100":"bg-red-500 hover:bg-red-600"} text-white px-2 py-2 rounded shadow transition-colors duration-300 text-sm`}
+    className={`${buttonload.type=="delete"&&buttonload.id==report._id?"from-green-100 to-teal-100":"bg-red-500 hover:bg-red-600"} text-white px-2 py-2 rounded shadow transition-colors duration-300 text-sm`}
     title="Delete Report"
   >
-    {buttonload=="delete"?<HashLoader color="teal" size={30} cssOverride={override} />:" 🗑 Delete"}
+    {buttonload.type=="delete"&&buttonload.id==report._id?<HashLoader color="teal" size={30} cssOverride={override} />:" 🗑 Delete"}
   </button>
 </div>
 

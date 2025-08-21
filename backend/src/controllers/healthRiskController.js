@@ -205,11 +205,11 @@ export const getHealthReportPdfById = async (req, res) => {
     });
 
     await browser.close();
-
+        
     // ✅ Response headers
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", `attachment; filename="Healix-HealthReport-${Date.now()}.pdf"`);
-    res.end(pdfBuffer);
+   return res.send(pdfBuffer);
 
   } catch (error) {
     console.error("PDF Generation Error:", error);
