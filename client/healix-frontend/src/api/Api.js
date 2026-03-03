@@ -4,8 +4,8 @@ import axios from "axios";
 //
 
 const axiosInstance = axios.create({
- baseURL: "https://medico-ha7q.onrender.com/api",
-//baseURL:"http://localhost:5000/api",
+ //baseURL: "https://medico-2-m414.onrender.com/api",
+baseURL:"http://localhost:5002/api",
 
   withCredentials: true, // allows sending cookies
 });
