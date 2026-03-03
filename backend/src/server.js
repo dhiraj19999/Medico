@@ -1,10 +1,8 @@
-// server.js
+
 import express from "express"
 import dotenv from 'dotenv';
 import cookieParser from "cookie-parser";
-import https from 'https';
-import fs from 'fs';
-import path from "path";
+
 
 import "./scheduler/autoCompleteAppointments.js"
 import cors from 'cors';
@@ -50,7 +48,7 @@ app.use(
 
 // Explicitly handle preflight
 app.options("*", cors({
-  origin: allowedOrigins,
+  origin: true,
   credentials: true,
 }));
 
@@ -72,7 +70,7 @@ app.use('/api/feedback', feedbackRoute);
 
 
 
-// Redoc UI serve karne ke liye
+
 
 
 

@@ -1,7 +1,7 @@
-// controllers/appointmentController.js
+
 import Appointment from "../models/Appointment.js";
 import nodemailer from "nodemailer"
-// 📅 Book Appointment (User)
+
 
 import Doctor from "../models/Doctor.js";
 import User from "../models/User.js";
@@ -17,12 +17,12 @@ const [hours, minutes] = timeString.split(":");
 const dat= new Date();
 dat.setHours(parseInt(hours), parseInt(minutes), 0, 0);
 
-    // Basic validation
+   
     if (!doctor || !date || !time) {
       return res.status(400).json({ message: "Doctor, date and time are required" });
     }
 
-    // Check doctor exists
+    
     const doctorData = await Doctor.findById(doctor);
     if (!doctorData) {
       return res.status(404).json({ message: "Doctor not found" });

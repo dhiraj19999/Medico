@@ -1,8 +1,8 @@
-// scheduler/autoCompleteAppointments.js
+
 import cron from "node-cron";
 import Appointment from "../models/Appointment.js";
 
-// Har 1 minute me check karega
+
 cron.schedule("* * * * *", async () => {
     console.log("cron runing")
   try {
